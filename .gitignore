@@ -1,2 +1,5 @@
 ..DS_Store
 clone_all_helper.sh
+
+venv/
+env/

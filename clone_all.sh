@@ -6,7 +6,7 @@
 # Written By: Brian Konzman
 
 
-if [[ $# -ne 4 ]];
+if [[ ("${#}" -ne "4") && ("${#}" -ne "5") ]];
 	then
 	echo ""
 	echo "This script will clone groups of repos from an organization using an identifier"
@@ -18,6 +18,7 @@ if [[ $# -ne 4 ]];
 	echo "2. Name of Identifier (assignment)"
 	echo "3. Your github username"
 	echo "4. The protocol for cloning the repo (ssh/https)"
+	echo "(optional) 5. Additional command after cloning a repo"
 	echo ""
 	echo "note: To use ssh, you must set up an ssh key with github"
 	echo "You may find it useful to set up your shell to know your GitHub credentials for https"
@@ -27,7 +28,7 @@ else
 	githubUsername=$3
 	tag=$4
 
-	if [ "$tag" == "https" ];
+	if [[ "${tag}" = "https" ]];
 		then
 		tag="clone_url"
 		echo "Using https"
@@ -55,8 +56,13 @@ else
 		rawJSON=$rawJSON$tempJSON
 		((page++))
 	done
+
+	echo "raw is ${rawJSON}" && return
+
 	# grep full lines that have the same tag identifier
 	fullLines=$(echo "$rawJSON" | grep "$tag" )
+
+	echo ${fullLines} > fullLines.txt
 
 	# grep just the url
 	justURLs=$(echo "$fullLines" | grep -o "[^\"]*"$identifier"[^\"]*")
@@ -69,11 +75,15 @@ else
 
 	while read -r url; do
 		dir=$(basename ${url})
+		repoName=${dir%.git} # string manipulation https://stackoverflow.com/questions/2664740/extract-file-basename-without-path-and-extension-in-bash
 		dir=${dir//.git}
 		if [ -d ${dir} ]; then
 			git -C ${dir} pull
 		else
 			git clone ${url}
+			cd ./${repoName}
+			eval ${5:-":"}
+			cd ..
 		fi
-	done <<< "$justURLs"
+	done <<< "${justURLs}"
 fi
