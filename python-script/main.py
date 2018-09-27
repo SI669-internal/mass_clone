@@ -119,20 +119,18 @@ def interactive(assignment):
         print('End of list, roll over.')
 
 if __name__ == "__main__":
-    # assignment_lab2 = load_submit_data(
-    #     prefix='lab2-parta', 
-    #     due='2018-09-18T23:59:59Z',
-    #     full_points=30,
-    #     refetch_github_list=False,
-    #     refetch_github_repo='soft'
-    # )
-
     assignment = load_submit_data(
-        prefix='lab4-birthdaytown', 
-        due='2018-10-04T23:59:59Z',
-        full_points=105,
-        refetch_github_list=False
+        prefix='lab2-parta', 
+        due='2018-09-18T23:59:59Z',
+        full_points=30,
     )
+
+    # assignment = load_submit_data(
+    #     prefix='lab4-birthdaytown', 
+    #     due='2018-10-04T23:59:59Z',
+    #     full_points=105,
+    #     refetch_github_list=False
+    # )
 
 
     for error in ERROR_MESSAGES:

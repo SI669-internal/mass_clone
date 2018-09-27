@@ -93,7 +93,7 @@ class Assignment():
     def save(self):
         record_file_path = self.get_record_file_path()
         with record_file_path.open(mode='w') as f:
-            json.dump(self.serialize(), f)
+            json.dump(self.serialize(), f, sort_keys=True, indent=4)
     
 class Submit():
 
