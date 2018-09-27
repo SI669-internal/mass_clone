@@ -1,6 +1,3 @@
-from requests import get # http://docs.python-requests.org/en/master/
-import json
-import datetime
 import pathlib # https://realpython.com/python-pathlib/
 '''
 # Generate path object (several ways)
@@ -31,74 +28,114 @@ path.exists() # True / False
 path.replace(another_path) # Will move file to that path. Will overwirte file if exists!
 '''
 
-import csv # https://realpython.com/python-csv/
+import os
 
 from script_settings import *
 from roster import *
+from track import *
+from github_api import *
+from mass_clone import *
 
-def get_datetime_now_iso_string():
-    return datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%SZ')
+ERROR_MESSAGES = []
 
-def get_api_data():
-    response_files_check = DATA_FOLDER_PATH.glob('response*.json')
-    for response_file_path in response_files_check:
-        backup_data_folder_path = DATA_FOLDER_PATH / 'backup'
-        response_file_path.replace(backup_data_folder_path / response_file_path.name)
+# see more at https://gist.github.com/bobthecow/757788
+def open_new_terminal_tab():
+    os.system("osascript -e 'tell application \"iTerm\" to activate' -e 'tell application \"System Events\" to tell process \"iTerm\" to keystroke \"t\" using command down'")
 
-    # Github API https://developer.github.com/v3/repos/#list-your-repositories
-    response = get('https://api.github.com/orgs/SI669-classroom/repos', auth=(os.environ['GITHUB_USER'], os.environ['GITHUB_PASSWORD']))
-    response_data = response.json()
-
-    # cache
-    response_data_path = DATA_FOLDER_PATH / 'response-{}.json'.format(get_datetime_now_iso_string())
-    response_data_path.write_text(json.dumps(response_data))
-    
-    return response_data
-
-def get_submit_data(raw_api_data, assignment_identifier):
-    api_data = raw_api_data
-    due_at = datetime.datetime(year=2018, month=9, day=18, hour=11, minute=59, second=59, microsecond=999)
-    student_roster = get_student_roster()
-    submit_data = []
-
+def filter_submit_from_api_data(api_data, assignment_prefix):
     assignment_api_data = []
+    student_roster = get_student_roster()
+    
     for data in api_data:
-        if data['name'].startswith(assignment_identifier):
+        # filter only this assingment
+        if data['name'].startswith(assignment_prefix):
             repo_name = data['name']
             github_account = repo_name.split('-')[-1]
+
+            # exclude instructors
             if (
                 github_account != 'kchetan92' and
-                github_account != 'rivernews'
+                github_account != 'rivernews' and
+                github_account != 'numerator'
                 ):
+                
+                # append useful entry
                 data['github_account'] = github_account
                 data['repo_name'] = repo_name
-                assignment_api_data.append(data)
-
-    for data in assignment_api_data:
-        clone_url = data['clone_url']
-        submitted_at = datetime.datetime.strptime(data['updated_at'], '%Y-%m-%dT%H:%M:%SZ')
-        student_name = student_roster[data['github_account']]['student_name']
-        is_late = submitted_at > due_at 
-        late_delta = submitted_at - due_at if is_late else None
-
-        submit_data.append({
-            'clone_url': clone_url,
-            'submitted_at': submitted_at,
-            'repo_name': data['repo_name'],
-            'is_late': is_late,
-            'late_delta': late_delta,
-            'github_account': data['github_account'],
-            'student_name': student_name
-        })
+                try:
+                    data['student_name'] = student_roster[github_account]['student_name']
+                    assignment_api_data.append(data)
+                except:
+                    ERROR_MESSAGES.append(f"ERROR: Github account cannot resolve who: {github_account} for submitted repo: {repo_name}")
+                
     
-    return submit_data
+    return assignment_api_data
 
+def load_submit_data(prefix, due, full_points, refetch_github_list=False, refetch_github_repo='soft'):
+    assignment = Assignment(
+        prefix=prefix, 
+        due=due,
+        full_points=full_points,
+    )
+
+    # if no submit data at local, definitely download from Github
+    if (len(assignment.submits) == 0 or refetch_github_list):
+        raw_api_data = get_api_data(prefix)
+        assignment_api_submit_data = filter_submit_from_api_data(raw_api_data, prefix)
+        assignment.deserialize_submits(assignment_api_submit_data)
+
+        if refetch_github_repo == 'hard':
+            # wipe and reclone
+            wipe_all_repo(prefix)
+            mass_clone(prefix, assignment.submits)
+        elif refetch_github_repo == 'soft':
+            mass_clone(prefix, assignment.submits)
+
+    
+    assignment.save()
+    return assignment
+
+def get_submit_path(assignment_prefix, submit):
+    return ALL_ASSIGNMENT_PATH / assignment_prefix / submit.repo_name
+
+def interactive(assignment):
+    while True:
+        for submit in assignment.submits:
+            print(f'''\nStudent Name: {submit.student_name}\nRepo: {submit.repo_name}''')
+            os.system(f"cd {get_submit_path(assignment.prefix, submit)}")
+            open_new_terminal_tab()
+            if submit.grade == None:
+                user_input = input(f'Grade ({assignment.full_points}%)? ')
+            else:
+                user_input = input(f'Regrade ({submit.grade}/{assignment.full_points})? ')
+            
+            if user_input == '':
+                pass
+            else:
+                submit.grade = int(user_input)
+            
+            assignment.save()
+        
+        print('End of list, roll over.')
 
 if __name__ == "__main__":
+    # assignment_lab2 = load_submit_data(
+    #     prefix='lab2-parta', 
+    #     due='2018-09-18T23:59:59Z',
+    #     full_points=30,
+    #     refetch_github_list=False,
+    #     refetch_github_repo='soft'
+    # )
 
-    api_data = get_api_data()
-    submit_data = get_submit_data(api_data, 'lab2-parta')
+    assignment = load_submit_data(
+        prefix='lab4-birthdaytown', 
+        due='2018-10-04T23:59:59Z',
+        full_points=105,
+        refetch_github_list=False
+    )
 
-    for data in submit_data:
-        print(data, '\n')
-    print('Total {} records'.format(len(submit_data)))
+
+    for error in ERROR_MESSAGES:
+        print(error)
+    
+    interactive(assignment)

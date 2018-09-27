@@ -23,4 +23,5 @@ def get_student_roster():
     return students
 
 if __name__ == "__main__":
-    pass
+    roster = get_student_roster()
+    print(f"We have {len(roster)} students in roster.")
