@@ -25,6 +25,12 @@ def mass_clone(assignment_prefix, submit_list):
 def get_assignment_path(assignment_prefix):
     return ALL_ASSIGNMENT_PATH / assignment_prefix
 
+def command_exec_in_submit(assignment_prefix, submit, command):
+    repo_path = get_assignment_path(assignment_prefix) / submit.repo_name
+    os.system(f"cd {repo_path.resolve()} && {command}")
+
+def open_submit_by_vscode(assignment_prefix, submit):
+    command_exec_in_submit(assignment_prefix, submit, 'code .')
 
 def wipe_all_repo(assignment_prefix):
     assignment_prefix_directory_path = get_assignment_path(assignment_prefix)

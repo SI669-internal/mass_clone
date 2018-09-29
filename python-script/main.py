@@ -35,6 +35,7 @@ from roster import *
 from track import *
 from github_api import *
 from mass_clone import *
+from google_spreadsheet_api import *
 
 ERROR_MESSAGES = []
 
@@ -71,7 +72,7 @@ def filter_submit_from_api_data(api_data, assignment_prefix):
     
     return assignment_api_data
 
-def load_submit_data(prefix, due, full_points, refetch_github_list=False, refetch_github_repo='soft'):
+def load_submit_data(prefix, due='', full_points='', refetch_github_list=False, refetch_github_repo='soft'):
     assignment = Assignment(
         prefix=prefix, 
         due=due,
@@ -100,40 +101,129 @@ def get_submit_path(assignment_prefix, submit):
 
 def interactive(assignment):
     while True:
-        for submit in assignment.submits:
-            print(f'''\nStudent Name: {submit.student_name}\nRepo: {submit.repo_name}''')
+        submits_total = len(assignment.submits)
+        i = 0
+        while True:
+            submit = assignment.submits[i]
+            # Info
+            graded_number = len([ s for s in assignment.submits if s.grade ])
+            print(f'''\n-----Grading {i+1}th/{submits_total}, Graded {graded_number}-----\nStudent Name: {submit.student_name}\nRepo: {submit.repo_name}\nComment: {submit.comment}\nGrade: {submit.grade}/{assignment.full_points}\n''')
             os.system(f"cd {get_submit_path(assignment.prefix, submit)}")
-            open_new_terminal_tab()
+
+            # Skip?
+            edit_everything = False
+            if submit.grade != None:
+                user_input = input('Already graded, press s to skip or considder other action (S=skip, p=previous, e=edit): ')
+                if user_input.lower() == 's' or user_input == '':
+                    i += 1
+                    continue
+                elif user_input.lower() == 'p':
+                    if i == 0:
+                        pass
+                    else:
+                        i -= 1
+                    continue
+                elif user_input.lower() == 'e':
+                    edit_everything = True
+
+            # Run Code
+            # command_exec_in_submit(assignment.prefix, submit, 'node -v')
+
+            # Inspect code
+            open_submit_by_vscode(assignment.prefix, submit)
+
+            # Grading
             if submit.grade == None:
-                user_input = input(f'Grade ({assignment.full_points}%)? ')
+                user_input = input(f'Grade (full_points={assignment.full_points}, press enter to skip, d=delete grade, p=back to previous student submit. To comment at the same time, type\':\' after grade and type in comment): ')
             else:
-                user_input = input(f'Regrade ({submit.grade}/{assignment.full_points})? ')
+                user_input = input(f'Regrade (currently={submit.grade}/{assignment.full_points}), press enter to skip, d=delete grade. To comment, type\':\' after grade and type in comment):  ')
             
             if user_input == '':
                 pass
+            elif user_input == 'd':
+                submit.grade = None
+            elif user_input.lower() == 'p':
+                if i == 0:
+                    pass
+                else:
+                    i -= 1
+                continue
+            elif ':' in user_input:
+                tokens = user_input.split(':')
+                submit.grade = int(tokens[0])
+                submit.comment = ''.join(tokens[1:])
             else:
                 submit.grade = int(user_input)
             
+            # Commenting
+            if not submit.grade or edit_everything:
+                user_input = input(f'Enter comment (enter to skip, d=delete comment): ')
+                if user_input != '' and user_input.lower() != 'd':
+                    submit.comment = user_input
+                elif user_input.lower() == 'd':
+                    submit.comment = None
+            
+            print('\n======')
+            
             assignment.save()
+
+            sheet_api = SheetAPI()
+            sheet_api.upload_all_records()
+            i += 1
         
         print('End of list, roll over.')
 
 if __name__ == "__main__":
+    user_input = input('WARNING: This script will batch clone repo if not done yet, you might want to use in a public computer due to the heavy read/write on your computer disk. Proceed? (Y/n) ')
+    if user_input.lower() == 'n':
+        exit(0)
+
+    # lab2-parta, lab4-birthdaytown
+    previous_session_prefix_input = restore_session_dict('prefix.json')
+    if previous_session_prefix_input and previous_session_prefix_input['prefix']:
+        previous_session_prefix_input = previous_session_prefix_input['prefix']
+        user_input = input(f'\nWill start fetching repos. Before that, please enter assignment prefix ({previous_session_prefix_input}): ')
+    else:
+        user_input = input(f'\nWill start fetching repos. Before that, please enter assignment prefix: ')
+    if previous_session_prefix_input and user_input == '':
+        user_input = previous_session_prefix_input
+    elif not previous_session_prefix_input and user_input == '':
+        print('No assignment prefix provided. Script terminated.')
+        exit(0)
+    else:
+        store_session_dict({'prefix': user_input}, 'prefix.json')
+
     assignment = load_submit_data(
-        prefix='lab2-parta', 
-        due='2018-09-18T23:59:59Z',
-        full_points=30,
+        prefix=user_input, 
+        refetch_github_list=False
     )
-
-    # assignment = load_submit_data(
-    #     prefix='lab4-birthdaytown', 
-    #     due='2018-10-04T23:59:59Z',
-    #     full_points=105,
-    #     refetch_github_list=False
-    # )
-
 
     for error in ERROR_MESSAGES:
         print(error)
+
+    if not assignment.full_points:
+        user_input = input('\nNo assignment full points in cache, please provide: ')
+        assignment.prefix = int(user_input)
+        assignment.save()
     
-    interactive(assignment)
+    if not assignment.due:
+        user_input = input('\nNo assignment due in cache, please provide in format YYYY-MM-DD (Will always use 23:59:59 as time): ')
+        assignment.due = Serializer.deserialize_time(f'{user_input}T23:59:59Z')
+        assignment.save()
+    
+    print('\n---Assignment Info---')
+    print(f'Assignment: {assignment.prefix}\nDue: {assignment.due}\nFull Points: {assignment.full_points}\n---------------------')
+    user_input = input('Confirm if the assignment info is correct? (Y/n) ')
+
+    record_file_path = DATA_FOLDER_PATH / 'records' / f'record-{assignment.prefix}.json'
+    if user_input == '' or user_input.lower() == 'y':
+        user_input = input(f'\nOK, let\'s start!\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually in {record_file_path}. Sounds good? (Y/n) ')
+        if user_input.lower() != 'n':
+            interactive(assignment)
+    else:
+        print('\nPlease correct the assignment info manually in {}'.format(
+            record_file_path
+        ))
+        print('INFO: Script terminated.')
+    
+    

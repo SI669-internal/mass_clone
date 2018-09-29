@@ -12,16 +12,18 @@ class Assignment():
     prefix = None
     submits = []
 
-    def __init__(self, prefix, due, full_points):
+    def __init__(self, prefix, due='', full_points=''):
         self.prefix = prefix
 
         # retrieve from previous session or new 
         json_data = self.get_record_json_data()
         
         # override assignment attributes
-        json_data['due'] = due
+        if due != '':
+            json_data['due'] = due
         json_data['prefix'] = prefix
-        json_data['full_points'] = full_points
+        if full_points != '':
+            json_data['full_points'] = full_points
 
         # load into objects for runtime
         self.deserialize(json_data)
