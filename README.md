@@ -1,8 +1,11 @@
 ### Dependency
 
 - `pip -r requirements.txt`
-- Install vscode and `Path` so `code .` will work.
+- Install `vscode` and `Path` so `code .` will work.
+- Using `iterm2` if you want to use `grade_additional_command`
+  - otherwise won't open iterm2 for you when you set `grade_additional_command`
 - Setup Google Sheet API - download `credentials.json`.
+  - [Go to Sheet API Doc](https://developers.google.com/sheets/api/quickstart/python) and press "Enable the google sheets api" to download.
 
 ### Lab 2 Part A Grading Insights
 

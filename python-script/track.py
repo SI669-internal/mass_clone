@@ -79,7 +79,10 @@ class Assignment():
     def deserialize_submits(self, assignment_api_submit_data):
         for json_data in assignment_api_submit_data:
             submit = Submit(json_data=json_data)
-            submit.late = submit.submitted_at > self.due
+            if submit.submitted_at and self.due:
+                submit.late = submit.submitted_at > self.due
+            else:
+                submit.late = None
 
             # update existing entry
             is_replace = False
@@ -153,11 +156,17 @@ class Serializer():
     
     @staticmethod
     def deserialize_time(time_string):
-        return datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
+        if not time_string:
+            return None
+        else:
+            return datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
     
     @staticmethod
     def serialize_time(datetime_object):
-        return datetime_object.strftime('%Y-%m-%dT%H:%M:%SZ')
+        if not datetime_object:
+            return None
+        else:
+            return datetime_object.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 if __name__ == "__main__":
     pass

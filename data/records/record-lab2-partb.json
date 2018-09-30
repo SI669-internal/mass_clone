@@ -1,0 +1,173 @@
+{
+    "due": "2018-09-18T23:59:59Z",
+    "full_points": 75,
+    "prefix": "lab2-partb",
+    "submits": [
+        {
+            "clone_url": "https://github.com/neilzhu2/669_lab2_ng",
+            "comment": null,
+            "github_account": "neilzhu2",
+            "grade": 75,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-669_lab2_ng-neilzhu2",
+            "student_name": "Lihan Zhu",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/PrincipleZ/SI669_lab2",
+            "comment": null,
+            "github_account": "PrincipleZ",
+            "grade": 75,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-SI669_lab2-PrincipleZ",
+            "student_name": "Yuanze Zhang",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/jellyjellyz/lab2-angular-tutorial",
+            "comment": null,
+            "github_account": "jellyjellyz",
+            "grade": 70,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-lab2-angular-tutorial-jellyjellyz",
+            "student_name": "Jiayu Zhang",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/alejwang/angular-tour-of-heroes",
+            "comment": null,
+            "github_account": "alejwang",
+            "grade": 75,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-angular-tour-of-heroes-alejwang",
+            "student_name": "Zhen Wang",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/Adonais0/AngularTourOfHero",
+            "comment": null,
+            "github_account": "Adonais0",
+            "grade": 75,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-AngularTourOfHero-Adonais0",
+            "student_name": "Chuyao Wang",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/springshim/SI669_lab2",
+            "comment": null,
+            "github_account": "springshim",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-SI669_lab2-springshim",
+            "student_name": "Bomi Shim",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/dmscola/669week2",
+            "comment": null,
+            "github_account": "dmscola",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-669week2-dmscola",
+            "student_name": "Dominic Michael Scola",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/JaneYum/Angular_Js_A_list_of_Heroes",
+            "comment": null,
+            "github_account": "JaneYum",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-Angular_Js_A_list_of_Heroes-JaneYum",
+            "student_name": "Yu Qin",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/OliviaOuyang/SI669_lab2",
+            "comment": null,
+            "github_account": "OliviaOuyang",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-SI669_lab2-OliviaOuyang",
+            "student_name": "Mengzhu Ouyang",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/alexlu3211/SI669-assignment-2",
+            "comment": null,
+            "github_account": "alexlu3211",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-SI669-assignment-2-alexlu3211",
+            "student_name": "Alex Lu",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/pansyjia/Promises-Angular_E1",
+            "comment": null,
+            "github_account": "pansyjia",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-Promises-Angular_E1-pansyjia",
+            "student_name": "Siyu Jia",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/huiyihuang/SI-669-Lab2",
+            "comment": null,
+            "github_account": "huiyihuang",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-SI-669-Lab2-huiyihuang",
+            "student_name": "Huiyi Huang",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/angiegao95/si669-lab02",
+            "comment": null,
+            "github_account": "angiegao95",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-si669-lab02-angiegao95",
+            "student_name": "Mingyue Gao",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/wyclem/si669-lab2",
+            "comment": null,
+            "github_account": "wyclem",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-si669-lab2-wyclem",
+            "student_name": "Wyatt Clement",
+            "submitted_at": null
+        },
+        {
+            "clone_url": "https://github.com/chenkf/SI-669",
+            "comment": null,
+            "github_account": "chenkf",
+            "grade": null,
+            "late": null,
+            "late_delta": null,
+            "repo_name": "lab2-partb-SI-669-chenkf",
+            "student_name": "Kaifeng Chen",
+            "submitted_at": null
+        }
+    ],
+    "submits_count": 15
+}

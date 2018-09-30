@@ -19,7 +19,8 @@ class SheetAPI():
     def __init__(self):
         self.spreadsheet_id = '1jZOmd0lkXcllnhtk3DmC7oSM5Q_4H7R-pO9Wy-ydzKo'
         self.service = self.get_service()
-        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api(self.service)
+        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api('main!A5:AH')
+        self.student_names_order = self.get_student_name_order_spreadsheet(self.service)
 
     def get_service(self):
         """Shows basic usage of the Sheets API.
@@ -34,19 +35,20 @@ class SheetAPI():
 
         return service
 
-    def get_raw_data_spreadsheet_api(self, service):
-        lower_data_range = f'main!A5:AH'
+    def get_raw_data_spreadsheet_api(self, range):
+        data_range = range
+        service = self.service
         
         result = service.spreadsheets().values().get( # https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchGet
             spreadsheetId=self.spreadsheet_id,
-            range=lower_data_range,
+            range=data_range,
             majorDimension='COLUMNS'
         ).execute()
         raw_api_columns = result.get('values', [])
 
         result = service.spreadsheets().values().get( # https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchGet
             spreadsheetId=self.spreadsheet_id,
-            range=lower_data_range,
+            range=data_range,
             majorDimension='ROWS'
         ).execute()
         raw_api_rows = result.get('values', [])
@@ -124,8 +126,7 @@ class SheetAPI():
                 json_data['submits_by_student_name_normalized'] = {}
                 json_data['submits_not_exist'] = [] # name in sheet, but no repo (yet) or not yet downloaded
                 json_data['submits_not_in_sheet'] = {} # repo created and downloaded, but not in sheet's roster
-                student_names_order = self.get_student_name_order_spreadsheet(service)
-                for student_name in student_names_order:
+                for student_name in self.student_names_order:
                     if student_name in json_data['submits_by_student_name']:
                         json_data['submits_by_student_name_normalized'][student_name] = json_data['submits_by_student_name'][student_name]
                         json_data['submits_by_student_name'].pop(student_name)
@@ -212,8 +213,6 @@ class SheetAPI():
         return _rows_data
 
     def upload_all_records(self):
-        self.get_student_name_order_spreadsheet(self.service)
-
         rows_data = self.generate_rows_data_for_all_records(self.service)
 
         print('INFO: Uploading all records...')

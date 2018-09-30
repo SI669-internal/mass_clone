@@ -24,6 +24,34 @@ def github_search_api(assigment_prefix):
 
     return json_data.get('items')
 
+def filter_submit_from_api_data(api_data, assignment_prefix):
+    assignment_api_data = []
+    student_roster = get_student_roster()
+    
+    for data in api_data:
+        # filter only this assingment
+        if data['name'].startswith(assignment_prefix):
+            repo_name = data['name']
+            github_account = repo_name.split('-')[-1]
+
+            # exclude instructors
+            if (
+                github_account != 'kchetan92' and
+                github_account != 'rivernews' and
+                github_account != 'numerator'
+                ):
+                
+                # append useful entry
+                data['github_account'] = github_account
+                data['repo_name'] = repo_name
+                try:
+                    data['student_name'] = student_roster[github_account]['student_name']
+                    assignment_api_data.append(data)
+                except:
+                    ERROR_MESSAGES.append(f"ERROR: Github account cannot resolve who: {github_account} for submitted repo: {repo_name}")
+    
+    return assignment_api_data
+
 def get_api_data(assigment_prefix):
     response_files_check = DATA_FOLDER_PATH.glob('response*.json')
     for response_file_path in response_files_check:
