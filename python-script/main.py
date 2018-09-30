@@ -2,8 +2,11 @@ from interactive import *
 
 if __name__ == '__main__':
     interactive_assignment_setup({
-        # (optional) options: 'skip-issue-graded', 'skip-issue', 'default'
-        'mode': 'skip-issue-graded', 
+        # (optional) available options listed below.
+        # 'skip-issue-graded': skip commented submits and graded submits.
+        # 'skip-issue': skip commented submits
+        # 'default': always ask before skip
+        'skip-mode': 'skip-issue-graded', 
 
         'github_config': {
             # (optional) 

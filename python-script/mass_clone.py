@@ -31,7 +31,7 @@ def mass_clone(assignment_prefix, submit_list, repo_additional_command):
                 all_succeed = False
     
     if all_succeed:
-        print('INFO: All repo cloned successfully.')
+        print('\nINFO: All repo cloned successfully.')
     else:
         clear_and_prompt_error()
     

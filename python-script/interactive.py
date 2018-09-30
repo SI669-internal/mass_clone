@@ -31,7 +31,6 @@ path.replace(another_path) # Will move file to that path. Will overwirte file if
 import os
 
 from script_settings import *
-from roster import *
 from track import *
 from github_api import *
 from mass_clone import *
@@ -102,12 +101,13 @@ def interactive_assignment_setup(config={}):
         store_session_dict({'prefix': user_input}, 'prefix.json')
 
     # Ready to create assignment object
+    print('\nINFO: Loading and cloning submits...')
     sheet_api = SheetAPI()
     github_config = config.get('github_config', {})
     if github_config.get('use_personal_repo', ''):
         github_config['use_personal_repo']['sheet_api'] = sheet_api
 
-    mode = config.get('mode', 'default')
+    mode = config.get('skip-mode', 'default')
     assignment = load_submit_data(
         prefix=user_input, 
         github_config=github_config
@@ -125,15 +125,14 @@ def interactive_assignment_setup(config={}):
         assignment.due = Serializer.deserialize_time(f'{user_input}T23:59:59Z')
         assignment.save()
     
+    print('\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually in {record_file_path}.')
     print('\n---Assignment Info---')
     print(f'Assignment: {assignment.prefix}\nDue: {assignment.due}\nFull Points: {assignment.full_points}\nSubmits Total: {len(assignment.submits)}\nGraded: {get_graded_number(assignment)}\nMode: {mode}\n---------------------')
-    user_input = input('Confirm if the assignment info is correct? (Y/n) ')
+    user_input = input('\nConfirm if the assignment info is correct? (Y/n) ')
 
     record_file_path = DATA_FOLDER_PATH / 'records' / f'record-{assignment.prefix}.json'
     if user_input == '' or user_input.lower() == 'y':
-        user_input = input(f'\nOK, let\'s start!\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually in {record_file_path}. Sounds good? (Y/n) ')
-        if user_input.lower() != 'n':
-            interactive_grade_submit(assignment, sheet_api, mode=mode, grade_additional_command=config.get('grade_additional_command', ''))
+        interactive_grade_submit(assignment, sheet_api, mode=mode, grade_additional_command=config.get('grade_additional_command', ''))
     else:
         print('\nPlease correct the assignment info manually in {}'.format(
             record_file_path
@@ -141,87 +140,87 @@ def interactive_assignment_setup(config={}):
         print('INFO: Script terminated.')
 
 def interactive_grade_submit(assignment, sheet_api, mode='default', grade_additional_command=''):
-    while True:
-        submits_total = len(assignment.submits)
-        i = 0
-        while True:
-            submit = assignment.submits[i]
-            # mode
-            if mode == 'skip-issue':
-                if submit.comment:
-                    i += 1
-                    continue
-            elif mode == 'skip-issue-graded':
-                if submit.comment or submit.grade:
-                    i += 1
-                    continue
+    i = 0
+    submits_total = len(assignment.submits)
+    while i < submits_total:
+        submit = assignment.submits[i]
+        # mode
+        if mode == 'skip-issue':
+            if submit.comment:
+                i += 1
+                continue
+        elif mode == 'skip-issue-graded':
+            if submit.comment or submit.grade:
+                i += 1
+                continue
 
-            # Info
-            print(f'''\n-----Grading {i+1}th/{submits_total}, Graded {get_graded_number(assignment)}-----\nStudent Name: {submit.student_name}\nRepo: {submit.repo_name}\nComment: {submit.comment}\nGrade: {submit.grade}/{assignment.full_points}\n''')
-            os.system(f"cd {get_submit_path(assignment.prefix, submit)}")
+        # Info
+        print(f'''\n-----Grading {i+1}th/{submits_total}, Graded {get_graded_number(assignment)}-----\nStudent Name: {submit.student_name}\nRepo: {submit.repo_name}\nComment: {submit.comment}\nGrade: {submit.grade}/{assignment.full_points}\n''')
+        os.system(f"cd {get_submit_path(assignment.prefix, submit)}")
 
-            # Skip?
-            edit_everything = False
-            if submit.grade != None:
-                user_input = input('Already graded, press s to skip or considder other action (S=skip, p=previous, e=edit): ')
-                if user_input.lower() == 's' or user_input == '':
-                    i += 1
-                    continue
-                elif user_input.lower() == 'p':
-                    if i == 0:
-                        pass
-                    else:
-                        i -= 1
-                    continue
-                elif user_input.lower() == 'e':
-                    edit_everything = True
-
-            # Run Code
-            # command_exec_in_submit(assignment.prefix, submit, 'node -v')
-
-            # Inspect code
-            if not grade_additional_command:
-                command_exec_in_submit(assignment.prefix, submit, 'code .')
-            else:
-                command_exec_in_submit_in_terminal(assignment.prefix, submit, grade_additional_command)
-
-            # Grading
-            if submit.grade == None:
-                user_input = input(f'Grade (full_points={assignment.full_points}, press enter to skip, d=delete grade, p=back to previous student submit. To comment at the same time, type\':\' after grade and type in comment): ')
-            else:
-                user_input = input(f'Regrade (currently={submit.grade}/{assignment.full_points}), press enter to skip, d=delete grade. To comment, type\':\' after grade and type in comment):  ')
-            
-            if user_input == '':
-                pass
-            elif user_input == 'd':
-                submit.grade = None
+        # Skip?
+        edit_everything = False
+        if submit.grade != None:
+            user_input = input('Already graded, press s to skip or considder other action (S=skip, p=previous, e=edit): ')
+            if user_input.lower() == 's' or user_input == '':
+                i += 1
+                continue
             elif user_input.lower() == 'p':
                 if i == 0:
                     pass
                 else:
                     i -= 1
                 continue
-            elif ':' in user_input:
-                tokens = user_input.split(':')
-                submit.grade = int(tokens[0])
-                submit.comment = ''.join(tokens[1:])
-            else:
-                submit.grade = int(user_input)
-            
-            # Commenting
-            if not submit.grade or edit_everything:
-                user_input = input(f'Enter comment (enter to skip, d=delete comment): ')
-                if user_input != '' and user_input.lower() != 'd':
-                    submit.comment = user_input
-                elif user_input.lower() == 'd':
-                    submit.comment = None
-            
-            print('\n======')
-            
-            assignment.save()
+            elif user_input.lower() == 'e':
+                edit_everything = True
 
-            sheet_api.upload_all_records()
-            i += 1
+        # Run Code
+        # command_exec_in_submit(assignment.prefix, submit, 'node -v')
+
+        # Inspect code
+        if not grade_additional_command:
+            command_exec_in_submit(assignment.prefix, submit, 'code .')
+        else:
+            command_exec_in_submit_in_terminal(assignment.prefix, submit, grade_additional_command)
+
+        # Grading
+        if submit.grade == None:
+            user_input = input(f'Grade (full_points={assignment.full_points}, press enter to skip, d=delete grade, p=back to previous student submit. To comment at the same time, type\':\' after grade and type in comment): ')
+        else:
+            user_input = input(f'Regrade (currently={submit.grade}/{assignment.full_points}), press enter to skip, d=delete grade. To comment, type\':\' after grade and type in comment):  ')
         
-        print('End of list, roll over.')
+        if user_input == '':
+            pass
+        elif user_input == 'd':
+            submit.grade = None
+        elif user_input.lower() == 'p':
+            if i == 0:
+                pass
+            else:
+                i -= 1
+            continue
+        elif ':' in user_input:
+            tokens = user_input.split(':')
+            submit.grade = int(tokens[0])
+            submit.comment = ''.join(tokens[1:])
+        else:
+            submit.grade = int(user_input)
+        
+        # Commenting
+        if not submit.grade or edit_everything:
+            user_input = input(f'Enter comment (enter to skip, d=delete comment): ')
+            if user_input != '' and user_input.lower() != 'd':
+                submit.comment = user_input
+            elif user_input.lower() == 'd':
+                submit.comment = None
+        
+        print('\n======')
+        
+        assignment.save()
+
+        sheet_api.upload_all_records()
+        i += 1
+    
+    print('\nINFO: Finishing looping through all submits.')
+    print('\nINFO: Script finished without error.')
 
