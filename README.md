@@ -2,7 +2,6 @@
 
 1. Setup dependency in the below section's instruction.
 1. Edit main.py setting for your needs
-  - 
 1. Run `python3 main.py`
 
 # Dependency
