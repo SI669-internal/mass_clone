@@ -64,7 +64,7 @@ def load_submit_data(prefix, due='', full_points='', github_config={}):
             assignment_api_submit_data = filter_submit_from_api_data(raw_api_data, prefix)
             assignment.deserialize_submits(assignment_api_submit_data)
         else:
-            sheet_api = use_personal_repo_config.get('sheet_api', SheetAPI())
+            sheet_api = use_personal_repo_config['sheet_api']
             sheet_range = use_personal_repo_config['sheet_range']
             use_personal_repo_submit_data = GithubUsePersonalRepo(sheet_api).get_personal_submits_data(prefix, sheet_range)
             assignment.deserialize_submits(use_personal_repo_submit_data)
@@ -102,7 +102,9 @@ def interactive_assignment_setup(config={}):
 
     # Ready to create assignment object
     print('\nINFO: Loading and cloning submits...')
-    sheet_api = SheetAPI()
+    spreadsheet_id = config.get('spreadsheet_id', None)
+    sheet_tab_name = config.get('sheet_tab_name', None)
+    sheet_api = SheetAPI(spreadsheet_id, sheet_tab_name)
     github_config = config.get('github_config', {})
     if github_config.get('use_personal_repo', ''):
         github_config['use_personal_repo']['sheet_api'] = sheet_api

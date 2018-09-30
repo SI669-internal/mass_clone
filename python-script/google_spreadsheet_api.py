@@ -16,10 +16,11 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 
 class SheetAPI():
 
-    def __init__(self):
-        self.spreadsheet_id = '1jZOmd0lkXcllnhtk3DmC7oSM5Q_4H7R-pO9Wy-ydzKo'
+    def __init__(self, spreadsheet_id, sheet_tab_name):
+        self.spreadsheet_id = spreadsheet_id
+        self.sheet_tab_name = sheet_tab_name
         self.service = self.get_service()
-        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api('main!A5:AH')
+        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api(f'{self.sheet_tab_name}!A5:AH')
         self.student_names_order = self.get_student_name_order_spreadsheet(self.service)
 
     def get_service(self):
@@ -169,7 +170,7 @@ class SheetAPI():
             prepend_data = ['', '']
 
         rows_data.append({
-            'range': 'main!A{}'.format(row_meta['number']),
+            'range': '{}!A{}'.format(self.sheet_tab_name, row_meta['number']),
             'values': [
                 prepend_data + [field] + row_data
             ]
@@ -179,7 +180,7 @@ class SheetAPI():
 
     def push_assignment_row_data(self, rows_data, assignment, row_meta, field):
         rows_data.append({
-            'range': 'main!A{}'.format(row_meta['number']),
+            'range': '{}!A{}'.format(self.sheet_tab_name, row_meta['number']),
             'values': [
                 [ '', '', field ] + assignment[field]
             ]

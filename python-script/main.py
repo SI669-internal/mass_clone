@@ -1,3 +1,4 @@
+from script_settings import *
 from interactive import *
 
 if __name__ == '__main__':
@@ -6,7 +7,14 @@ if __name__ == '__main__':
         # 'skip-issue-graded': skip commented submits and graded submits.
         # 'skip-issue': skip commented submits
         # 'default': always ask before skip
-        'skip-mode': 'skip-issue-graded', 
+        'skip-mode': '', 
+
+        # [required] the spreadsheet file you want to work with
+        # spread id https://docs.google.com/spreadsheets/d/<ID HERE>/edit..
+        'spreadsheet_id': os.environ['SPREADSHEET_ID'],
+
+        # [required] specify the sheet tab you want to show the result / progress of grading
+        'sheet_tab_name': 'main',
 
         'github_config': {
             # (optional) 
@@ -15,6 +23,7 @@ if __name__ == '__main__':
             # (optional) 
             # 'clone_repo_mode': 'soft', 
             
+            # [required] or (optional)
             # Please setup `use_personal_repo` if repo is not using Github Classroom 
             # If using Github Classroom, please comment out `use_personal_repo`
             'use_personal_repo': {
