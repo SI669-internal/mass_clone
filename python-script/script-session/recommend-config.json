@@ -1,0 +1,22 @@
+{
+    "lab2-partb": {
+        "skip-mode": "default", 
+        "spreadsheet_id": "SPREADSHEET_ID",
+
+        "sheet_tab_name": "main",
+
+        "github_config": {
+            "refetch_repo_list": true,
+
+            "clone_repo_mode": "soft", 
+            
+            "use_personal_repo": {
+                "sheet_range": "<sheet_tab_name>!<Range>:<Range>"
+            },
+
+            "repo_additional_command": "if [ -f ./package.json ]; then npm i; fi"
+        },
+
+        "grade_additional_command": "ng serve --open"
+    }
+}
