@@ -11,5 +11,5 @@ credentials.py
 
 settings_local.py
 
-data/backup/**
-data/records/**
+response-**
+record-**
