@@ -4,7 +4,8 @@ clone_all_helper.sh
 venv/
 env/
 
-**credential**
+credentials.json
+credentials.py
 
 **local-config**
 
