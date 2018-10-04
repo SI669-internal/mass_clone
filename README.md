@@ -1,13 +1,13 @@
 # How to use
 
 1. Setup dependency following the section below.
-1. Edit main.py setting for your needs. Inline explanation provided.
+1. Edit `main.py` setting for your needs. Inline explanation provided.
 1. Run `python3 main.py`
 
 # Dependency
 
 - `pip -r requirements.txt`
-- (Optional) Make sure you have `vscode` and `Path` setup, so when you run `code .` in terminal, vscode will open the current directory.
+- (Optional) Make sure you have `vscode` and `Path` setup, so when you run `code .` in terminal, vscode will open the current directory. [See this page for how to setup](https://code.visualstudio.com/docs/setup/mac).
 - (Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.
   - otherwise won't open iterm2 for you even when you set `grade_additional_command`
 - Create a `credentials.py` file that provides values for `os.environ['GITHUB_USER']` and `os.environ['GITHUB_PASSWORD']`. This is for github API that can search and get repo info. Not needed if the repos for the assignment does not come from Github Classroom.
