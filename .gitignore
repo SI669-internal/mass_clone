@@ -10,3 +10,6 @@ credentials.py
 **local-config**
 
 settings_local.py
+
+data/backup**
+data/records**
