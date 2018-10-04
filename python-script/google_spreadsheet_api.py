@@ -113,8 +113,13 @@ class SheetAPI():
     def load_all_records(self, service):
         records_path = DATA_FOLDER_PATH / 'records'
         records_files_path_collect = records_path.glob('record-*.json')
-        assignment_list = []
+        record_files_path_sorted = []
         for file_path in records_files_path_collect:
+            record_files_path_sorted.append(file_path)
+        record_files_path_sorted.sort()
+        
+        assignment_list = []
+        for file_path in record_files_path_sorted:
             with file_path.open(mode='r') as f:
                 json_data = json.load(f)
 

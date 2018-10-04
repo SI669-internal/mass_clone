@@ -7,7 +7,7 @@ if __name__ == '__main__':
         # 'skip-issue-graded': skip commented submits and graded submits.
         # 'skip-issue': skip commented submits
         # 'default': always ask before skip
-        'skip-mode': '', 
+        'skip-mode': 'skip-issue-graded', 
 
         # [required] the spreadsheet file you want to work with
         # spread id https://docs.google.com/spreadsheets/d/<ID HERE>/edit..
@@ -27,7 +27,7 @@ if __name__ == '__main__':
             # Please setup `use_personal_repo` if repo is not using Github Classroom 
             # If using Github Classroom, please comment out `use_personal_repo`
             'use_personal_repo': {
-                'sheet_range': 'lab2_partb_personal_repo!D1:R' # specify the range where the personal repo info are. See example at https://docs.google.com/spreadsheets/d/1jZOmd0lkXcllnhtk3DmC7oSM5Q_4H7R-pO9Wy-ydzKo/edit#gid=1501573164
+                'sheet_range': 'lab3_personal_repo!B2:Y' # specify the range where the personal repo info are. See example at https://docs.google.com/spreadsheets/d/1jZOmd0lkXcllnhtk3DmC7oSM5Q_4H7R-pO9Wy-ydzKo/edit#gid=1501573164
             },
 
             # (optional) after repo cloned, this code will run in shell environment. Already cd to repo directory for you.

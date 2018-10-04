@@ -15,7 +15,7 @@ def clear_and_prompt_error():
     for err in ERROR_MESSAGES:
         print(ERROR_MESSAGES)
     ERROR_MESSAGES = []
-    user_input = input('WARNING: Please check the error message(s) above. Proceed? (Y/n) ')
+    user_input = input('\nWARNING: Please check the error message(s) above. Proceed? (Y/n) ')
     if user_input.lower() != 'y':
         exit(0)
 

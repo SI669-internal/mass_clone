@@ -7,12 +7,14 @@
 # Dependency
 
 - `pip -r requirements.txt`
-- Make sure you have `vscode` and `Path` setup, so when you run `code .` in terminal, vscode will open the current directory.
+- (Optional) Make sure you have `vscode` and `Path` setup, so when you run `code .` in terminal, vscode will open the current directory.
 - (Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.
   - otherwise won't open iterm2 for you even when you set `grade_additional_command`
+- Create a `credentials.py` file that provides values for `os.environ['GITHUB_USER']` and `os.environ['GITHUB_PASSWORD']`. This is for github API that can search and get repo info. Not needed if the repos for the assignment does not come from Github Classroom.
 - Setup Google Sheet API - download `credentials.json`.
   - [Go to Sheet API Doc](https://developers.google.com/sheets/api/quickstart/python) and press "Enable the google sheets api" to download.
-- Create a `credentials.py` file that provides values for `os.environ['GITHUB_USER']` and `os.environ['GITHUB_PASSWORD']`. This is for github API that can search and get repo info. Not needed if the repos for the assignment does not come from Github Classroom.
+  - Prepare a google spreadsheet where you'll use it to store your grading and comments.
+  - Copy the spreadsheet ID and put it in `credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`
 
 ### Lab 2 Part A Grading Insights
 
