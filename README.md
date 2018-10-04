@@ -1,3 +1,10 @@
+# Batch Clone
+
+1st version automation tool that integrates three things:
+- Github API: Batch clone repo
+- Google Sheet API: Display grades / Read roster
+- Interactive Terminal: run code, grade and comment all in one place
+
 # How it works
 
 - Batch clone student repos
