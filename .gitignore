@@ -7,3 +7,5 @@ env/
 **credential**
 
 **local-config**
+
+settings_local.py

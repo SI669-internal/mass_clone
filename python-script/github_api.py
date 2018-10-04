@@ -3,7 +3,7 @@ import json
 import datetime
 import pathlib # https://realpython.com/python-pathlib/
 
-from script_settings import *
+from utilities import *
 
 def get_datetime_now_iso_string():
     return datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%SZ')

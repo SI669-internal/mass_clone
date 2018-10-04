@@ -2,7 +2,7 @@ import json
 import datetime
 from pathlib import Path
 
-from script_settings import *
+from utilities import *
 
 class Assignment():
     template_file_directory_path = Path(__file__).parent

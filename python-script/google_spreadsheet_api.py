@@ -6,7 +6,7 @@ from oauth2client import file, client, tools
 import json
 from pathlib import Path
 
-from script_settings import *
+from utilities import *
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/sheets.googleapis.com-python-quickstart.json

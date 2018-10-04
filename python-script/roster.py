@@ -1,4 +1,4 @@
-from script_settings import *
+from utilities import *
 import csv
 
 def get_student_roster():

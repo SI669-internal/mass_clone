@@ -30,14 +30,14 @@ path.replace(another_path) # Will move file to that path. Will overwirte file if
 
 import os
 
-from script_settings import *
+from utilities import *
 from track import *
 from github_api import *
 from mass_clone import *
 from google_spreadsheet_api import *
 from github_use_personal_repo import *
 
-from script_settings import *
+from utilities import *
 from mass_clone import *
 
 # see more at https://gist.github.com/bobthecow/757788
