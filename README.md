@@ -44,6 +44,7 @@
 ### Lab 2 Part A Grading Insights
 
 - [Ramdom] sometimes node toss warning about not using `catch()`. onrejected vs catch in Promise?
+- [Case D] Reject immediately even before loop.
 - [Case C] `setTimeout(resolve(), bignum);` is wrong use of `setTimeout` since the 1st arg should be a function instead of a value! See [this SO post](https://stackoverflow.com/questions/39538473/using-settimeout-on-promise-chain)
 - [Case B] some student's loop is blocking and not using Promise async feature.
 - [Case A] reject in the first loop round, but the loop still keeps going. (`resolve()` and `reject()` will not stop loop? Should instead explicitly do `return` after `resolve()` or `reject()`. [See this post](https://stackoverflow.com/questions/32536049/do-i-need-to-return-after-early-resolve-reject))
