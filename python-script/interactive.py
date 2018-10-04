@@ -127,7 +127,7 @@ def interactive_assignment_setup(config={}):
         assignment.due = Serializer.deserialize_time(f'{user_input}T23:59:59Z')
         assignment.save()
     
-    print('\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually in {record_file_path}.')
+    print(f'\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually later in data/records.')
     print('\n---Assignment Info---')
     print(f'Assignment: {assignment.prefix}\nDue: {assignment.due}\nFull Points: {assignment.full_points}\nSubmits Total: {len(assignment.submits)}\nGraded: {get_graded_number(assignment)}\nMode: {mode}\n---------------------')
     user_input = input('\nConfirm if the assignment info is correct? (Y/n) ')
