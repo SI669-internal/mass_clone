@@ -36,8 +36,8 @@
 
 # Dependency
 
-- `pip -r requirements.txt`
-- Setup Google Sheet API - download `credentials.json`.
+- `pip install -r requirements.txt`
+- Setup Google Sheet API - download `credentials.json` and place in folder `python-script`.
   - [Go to Sheet API Doc](https://developers.google.com/sheets/api/quickstart/python) and press "Enable the google sheets api" to download.
   - Prepare a google spreadsheet where you'll use it to store your grading and comments.
   - Copy the spreadsheet ID and put it in `credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`
@@ -93,8 +93,16 @@ pip install -r requirements.txt && \
 
 cd python-script
 
+cp credentials_example.py credentials.py
+
+cp settings_example.py settings_local.py
+
 # https://stackoverflow.com/questions/226703/how-do-i-prompt-for-yes-no-cancel-input-in-a-linux-shell-script
-read -p "Please follow the config instruction in https://github.com/SI669-internal/mass_clone . Finished? (Y/n)" yn
+
+read -p "Please follow the config instruction in https://github.com/SI669-internal/mass_clone . We will open the folder in Finder for you. Sounds good? (Y)" yn
+open .
+
+read -p " Finished following instructions? (Y/n)" yn
 case $yn in
     [Yy]* ) python3 main.y;;
     [Nn]* ) exit;;
