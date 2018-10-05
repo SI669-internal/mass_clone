@@ -80,14 +80,16 @@ brew update
 
 xcode-select --install
 
+read -p "You should see a prompt asking you to install software (xcode command line tools), please do so by pressing 'install' button. When you finish, proceed by hitting enter." yn
+
 brew install python3 # will take a while
 
-cd $HOME
-cd Downloads
-
-git clone https://github.com/SI669-internal/mass_clone.git
-
-cd mass_clone
+if [[ $? -eq 0 ]]; then
+    ;
+else
+    echo "ERROR: Failed to brew install python 3. See error message above."
+    return
+fi
 
 ```
 
@@ -96,6 +98,13 @@ cd mass_clone
 ```shell
 
 # Project Setup
+
+cd $HOME
+cd Downloads
+
+git clone https://github.com/SI669-internal/mass_clone.git
+
+cd mass_clone
 
 python3 -m venv venv
 

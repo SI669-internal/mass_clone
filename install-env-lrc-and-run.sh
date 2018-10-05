@@ -9,6 +9,18 @@ brew update
 xcode-select --install
 
 brew install python3 # will take a while
+if [[ $? -eq 0 ]]; then
+    ;
+else
+    echo "ERROR: Failed to brew install python 3. See error message above."
+    return
+fi
+
+
+
+
+
+##### Project Setup
 
 cd $HOME
 cd Downloads
@@ -16,14 +28,6 @@ cd Downloads
 git clone https://github.com/SI669-internal/mass_clone.git
 
 cd mass_clone
-
-## Install And Run On LRC Machine
-
-
-
-
-
-##### Project Setup
 
 python3 -m venv venv
 
