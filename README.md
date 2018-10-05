@@ -59,7 +59,7 @@
 
 # Useful Stuff
 
-## Install On A LRC Machine
+## Prepare Env On A LRC Machine
 
 ```shell
 
@@ -81,6 +81,14 @@ cd Downloads
 git clone https://github.com/SI669-internal/mass_clone.git
 
 cd mass_clone
+
+```
+
+## Install And Run On LRC Machine
+
+```shell
+
+# Project Setup
 
 python3 -m venv venv
 
