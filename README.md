@@ -48,7 +48,12 @@
 - (Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.
   - otherwise won't open iterm2 for you even when you set `grade_additional_command`
 
-### Lab 2 Part A Grading Insights
+# Future TODOs
+
+- Late penalty. Since for Github Classroom we already have a late boolean and hook for late delta, we can apply penalty based on the duration over due date.
+- Read record from google spreadsheet instead of local cache. This can let us be machine-indenpedent and easier to grade using public computer.
+
+#### Lab 2 Part A Grading Insights
 
 - [Ramdom] sometimes node toss warning about not using `catch()`. onrejected vs catch in Promise?
 - [Case D] Reject immediately even before loop.
@@ -57,9 +62,11 @@
 - [Case A] reject in the first loop round, but the loop still keeps going. (`resolve()` and `reject()` will not stop loop? Should instead explicitly do `return` after `resolve()` or `reject()`. [See this post](https://stackoverflow.com/questions/32536049/do-i-need-to-return-after-early-resolve-reject))
 - [Performance] `countBig()`: putting `resolve()` outside of `while` is much faster (10ms). If you put `if` in `while` then do `resolve()`, you have to keep checking for each round, which is much slower (500-1200ms).
 
-# Useful Stuff
+# Run On A LRC Machine
 
-## Prepare Env On A LRC Machine
+Download [this script](https://raw.githubusercontent.com/SI669-internal/mass_clone/master/install-env-lrc-and-run.sh).
+
+## Prepare Environment
 
 ```shell
 
@@ -84,7 +91,7 @@ cd mass_clone
 
 ```
 
-## Install And Run On LRC Machine
+## Install And Run
 
 ```shell
 
