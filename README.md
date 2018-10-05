@@ -72,7 +72,7 @@ Download [this script](https://raw.githubusercontent.com/SI669-internal/mass_clo
 
 cd $HOME && \
 git clone https://github.com/mxcl/homebrew.git && \
-export PATH=$HOME/homebrew/bin:$PATH && \
+export PATH=$HOME/homebrew/bin:$PATH
 
 
 # in order to proceed, mxay need to do brew update. See instruction prompted

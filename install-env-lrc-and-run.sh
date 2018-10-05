@@ -2,14 +2,13 @@
 cd $HOME && \
 git clone https://github.com/mxcl/homebrew.git && \
 export PATH=$HOME/homebrew/bin:$PATH && \
-
-# in order to proceed, mxay need to do brew update. See instruction prompted
-brew update
+brew update # in order to proceed, mxay need to do brew update. See instruction prompted
 
 xcode-select --install
 
 brew install python3 # will take a while
-if [[ $? -eq 0 ]]; then
+if [[ $? -eq 0 ]]; 
+    then
     ;
 else
     echo "ERROR: Failed to brew install python 3. See error message above."
