@@ -85,7 +85,7 @@ read -p "You should see a prompt asking you to install software (xcode command l
 brew install python3 # will take a while
 
 if [[ $? -eq 0 ]]; then
-    ;
+    :
 else
     echo "ERROR: Failed to brew install python 3. See error message above."
     return

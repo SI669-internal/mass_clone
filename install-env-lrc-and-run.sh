@@ -6,10 +6,12 @@ brew update # in order to proceed, mxay need to do brew update. See instruction 
 
 xcode-select --install
 
+read -p "You should see a prompt asking you to install software (xcode command line tools), please do so by pressing 'install' button. When you finish, proceed by hitting enter." yn
+
 brew install python3 # will take a while
-if [[ $? -eq 0 ]]; 
+if [[ $? -eq 0 ]];
     then
-    ;
+    :
 else
     echo "ERROR: Failed to brew install python 3. See error message above."
     return
