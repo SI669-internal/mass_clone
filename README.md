@@ -66,72 +66,7 @@
 
 Download [this script](https://raw.githubusercontent.com/SI669-internal/mass_clone/master/install-env-lrc-and-run.sh).
 
-## Prepare Environment
+## Run In Public Computer
 
-```shell
+See `install-env-lrc-and-run.sh` in the project root folder.
 
-cd $HOME && \
-git clone https://github.com/mxcl/homebrew.git && \
-export PATH=$HOME/homebrew/bin:$PATH
-
-
-# in order to proceed, mxay need to do brew update. See instruction prompted
-brew update
-
-xcode-select --install
-
-read -p "You should see a prompt asking you to install software (xcode command line tools), please do so by pressing 'install' button. When you finish, proceed by hitting enter." yn
-
-brew install python3 # will take a while
-
-if [[ $? -eq 0 ]]; then
-    :
-else
-    echo "ERROR: Failed to brew install python 3. See error message above."
-    return
-fi
-
-```
-
-## Install And Run
-
-```shell
-
-# Project Setup
-
-cd $HOME
-cd Downloads
-
-git clone https://github.com/SI669-internal/mass_clone.git
-
-cd mass_clone
-
-python3 -m venv venv
-
-. ./venv/bin/activate
-
-# if not pip yet, install the follow and follow the instruction on iriversland 1.0 website
-# easy_install --user pip
-
-pip install -r requirements.txt && \
-
-cd python-script
-
-cp credentials_example.py credentials.py
-
-cp settings_example.py settings_local.py
-
-# https://stackoverflow.com/questions/226703/how-do-i-prompt-for-yes-no-cancel-input-in-a-linux-shell-script
-
-read -p "Please follow the config instruction in https://github.com/SI669-internal/mass_clone . We will open the folder in Finder for you. Sounds good? (Y)" yn
-open .
-
-read -p " Finished following instructions? (Y/n)" yn
-case $yn in
-    [Yy]* ) python3 main.y;;
-    [Nn]* ) exit;;
-    * ) echo "Please answer by y or n."
-esac
-
-
-```

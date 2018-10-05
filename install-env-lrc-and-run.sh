@@ -1,6 +1,6 @@
 ##### Env Setup
 cd $HOME && \
-git clone https://github.com/mxcl/homebrew.git && \
+git clone https://github.com/mxcl/homebrew.git
 export PATH=$HOME/homebrew/bin:$PATH
 brew update # in order to proceed, mxay need to do brew update. See instruction prompted
 
