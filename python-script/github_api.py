@@ -4,6 +4,7 @@ import datetime
 import pathlib # https://realpython.com/python-pathlib/
 
 from utilities import *
+from roster import *
 
 def get_datetime_now_iso_string():
     return datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%SZ')
@@ -24,9 +25,9 @@ def github_search_api(assigment_prefix):
 
     return json_data.get('items')
 
-def filter_submit_from_api_data(api_data, assignment_prefix):
+def filter_submit_from_api_data(api_data, assignment_prefix, sheet_api):
     assignment_api_data = []
-    student_roster = get_student_roster()
+    student_roster = get_student_roster_by_sheet(sheet_api)
     
     for data in api_data:
         # filter only this assingment
@@ -48,7 +49,7 @@ def filter_submit_from_api_data(api_data, assignment_prefix):
                     data['student_name'] = student_roster[github_account]['student_name']
                     assignment_api_data.append(data)
                 except:
-                    ERROR_MESSAGES.append(f"ERROR: Github account cannot resolve who: {github_account} for submitted repo: {repo_name}")
+                    ERROR_MESSAGES.append(f"ERROR: Github account cannot resolve who: {github_account} for submitted repo: {repo_name}, after comparing w/ the roster in sheet.")
     
     return assignment_api_data
 

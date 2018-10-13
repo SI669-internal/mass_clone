@@ -27,8 +27,9 @@ def mass_clone(assignment_prefix, submit_list, repo_additional_command):
                 all_succeed = False
             else:
                 check_return = os.system(f"cd {repo_path.resolve()} && {repo_additional_command}")
-                ERROR_MESSAGES.append(f'ERROR: Failed on additional command. Command: {repo_additional_command}, at repo_path: {repo_path}.') if check_return != 0 else None
-                all_succeed = False
+                if check_return != 0:
+                    ERROR_MESSAGES.append(f'ERROR: Failed on additional command. Command: {repo_additional_command}, at repo_path: {repo_path}.') if check_return != 0 else None
+                    all_succeed = False
     
     if all_succeed:
         print('\nINFO: All repo cloned successfully.')

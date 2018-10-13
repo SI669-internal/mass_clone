@@ -20,8 +20,8 @@ class SheetAPI():
         self.spreadsheet_id = spreadsheet_id
         self.sheet_tab_name = sheet_tab_name
         self.service = self.get_service()
-        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api(f'{self.sheet_tab_name}!A5:AH')
-        self.student_names_order = self.get_student_name_order_spreadsheet(self.service)
+        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api(f'{self.sheet_tab_name}!A4:AH')
+        self.student_names_order = self.get_student_name_order_spreadsheet()
 
     def get_service(self):
         """Shows basic usage of the Sheets API.
@@ -55,10 +55,17 @@ class SheetAPI():
         raw_api_rows = result.get('values', [])
 
         return (raw_api_columns, raw_api_rows)
-
-    def get_student_name_order_spreadsheet(self, service):
+    
+    def get_student_names(self):
+        row_fields = self.raw_api_rows[1]
+        return row_fields[3:]
+    
+    def get_github_accounts(self):
         row_fields = self.raw_api_rows[0]
-        student_names = row_fields[3:]
+        return row_fields[3:]
+
+    def get_student_name_order_spreadsheet(self):
+        student_names = self.get_student_names()
         student_names_order_position = {}
         for i, student_name in enumerate(student_names):
             student_names_order_position[student_name] = i

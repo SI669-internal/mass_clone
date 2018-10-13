@@ -47,10 +47,10 @@ cp settings_example.py settings_local.py
 
 # https://stackoverflow.com/questions/226703/how-do-i-prompt-for-yes-no-cancel-input-in-a-linux-shell-script
 
-read -p "Please follow the config instruction in https://github.com/SI669-internal/mass_clone . We will open the folder in Finder for you. Sounds good? (Y)" yn
+read -p "Please follow the dependency instructions in https://github.com/SI669-internal/mass_clone . Also, we will open the project folder in Finder for you. If this sounds good, hit enter to proceed." yn
 open .
 
-read -p " Finished following instructions? (Y/n)" yn
+read -p "When you finished instructions setting up dependencies, hit enter." yn
 case $yn in
     [Yy]* ) python3 main.y;;
     [Nn]* ) exit;;

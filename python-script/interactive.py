@@ -47,7 +47,11 @@ def get_submit_path(assignment_prefix, submit):
 def get_graded_number(assignment):
     return len([ s for s in assignment.submits if s.grade ])
 
-def load_submit_data(prefix, due='', full_points='', github_config={}):
+def load_submit_data(prefix, due='', full_points='', github_config={}, sheet_api=None):
+    if sheet_api == None:
+        print("ERROR: sheet_api is None, but we need a sheet api instance.")
+        exit(1)
+
     assignment = Assignment(
         prefix=prefix, 
         due=due,
@@ -61,7 +65,7 @@ def load_submit_data(prefix, due='', full_points='', github_config={}):
     if (len(assignment.submits) == 0 or refetch_github_list):
         if not use_personal_repo_config:
             raw_api_data = get_api_data(prefix)
-            assignment_api_submit_data = filter_submit_from_api_data(raw_api_data, prefix)
+            assignment_api_submit_data = filter_submit_from_api_data(raw_api_data, prefix, sheet_api)
             assignment.deserialize_submits(assignment_api_submit_data)
         else:
             sheet_api = use_personal_repo_config['sheet_api']
@@ -80,12 +84,12 @@ def load_submit_data(prefix, due='', full_points='', github_config={}):
     assignment.save()
     return assignment
 
-def interactive_assignment_setup(config={}):
+def interactive_assignment_setup(_config={}):
     user_input = input('WARNING: This script will batch clone repo if not done yet, you might want to use in a public computer due to the heavy read/write on your computer disk. Proceed? (Y/n) ')
     if user_input.lower() == 'n':
         exit(0)
 
-    # lab2-parta, lab4-birthdaytown
+    # get assignment prefix
     previous_session_prefix_input = restore_session_dict('prefix.json')
     if previous_session_prefix_input and previous_session_prefix_input['prefix']:
         previous_session_prefix_input = previous_session_prefix_input['prefix']
@@ -99,6 +103,13 @@ def interactive_assignment_setup(config={}):
         exit(0)
     else:
         store_session_dict({'prefix': user_input}, 'prefix.json')
+    
+    # try to use local config for that assignment
+    local_configs = restore_session_dict("local-config.json")
+    if user_input in local_configs:
+        config = { **_config, **local_configs[user_input] }
+    else:
+        config = _config
 
     # Ready to create assignment object
     print('\nINFO: Loading and cloning submits...')
@@ -112,7 +123,8 @@ def interactive_assignment_setup(config={}):
     mode = config.get('skip-mode', 'default')
     assignment = load_submit_data(
         prefix=user_input, 
-        github_config=github_config
+        github_config=github_config,
+        sheet_api=sheet_api
     )
     
     clear_and_prompt_error()

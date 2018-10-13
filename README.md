@@ -52,6 +52,8 @@
 
 - Late penalty. Since for Github Classroom we already have a late boolean and hook for late delta, we can apply penalty based on the duration over due date.
 - Read record from google spreadsheet instead of local cache. This can let us be machine-indenpedent and easier to grade using public computer.
+  - Set dynamic for main sheet range, expose range to config.
+  
 
 #### Lab 2 Part A Grading Insights
 
@@ -62,11 +64,18 @@
 - [Case A] reject in the first loop round, but the loop still keeps going. (`resolve()` and `reject()` will not stop loop? Should instead explicitly do `return` after `resolve()` or `reject()`. [See this post](https://stackoverflow.com/questions/32536049/do-i-need-to-return-after-early-resolve-reject))
 - [Performance] `countBig()`: putting `resolve()` outside of `while` is much faster (10ms). If you put `if` in `while` then do `resolve()`, you have to keep checking for each round, which is much slower (500-1200ms).
 
-# Run On A LRC Machine
+# Run On A Public Computer
 
-Download [this script](https://raw.githubusercontent.com/SI669-internal/mass_clone/master/install-env-lrc-and-run.sh).
+## TL;DR
 
-## Run In Public Computer
+- Download [this script](https://raw.githubusercontent.com/SI669-internal/mass_clone/master/install-env-lrc-and-run.sh), or see `install-env-lrc-and-run.sh` in the project root folder.
 
-See `install-env-lrc-and-run.sh` in the project root folder.
+- Run the script
 
+## What does the script do?
+
+1. Run in user permission, no need for sudo.
+1. Install brew
+1. Install python3 and venv
+1. Prompt you to prepare some of the dependencies.
+1. Start the script for you at the end.
