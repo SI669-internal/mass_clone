@@ -48,6 +48,8 @@
 - (Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.
   - otherwise won't open iterm2 for you even when you set `grade_additional_command`
 
+- Should have `node ionic cordova` with you.
+
 # Future TODOs
 
 - Late penalty. Since for Github Classroom we already have a late boolean and hook for late delta, we can apply penalty based on the duration over due date.
