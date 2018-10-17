@@ -1,7 +1,7 @@
 ##### Env Setup
 cd $HOME && \
 git clone https://github.com/mxcl/homebrew.git
-export PATH=$HOME/homebrew/bin:$PATH
+echo 'export PATH=$HOME/homebrew/bin:$PATH' >> ~/.bashrc
 brew update # in order to proceed, mxay need to do brew update. See instruction prompted
 
 xcode-select --install
