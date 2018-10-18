@@ -49,6 +49,7 @@
   - otherwise won't open iterm2 for you even when you set `grade_additional_command`
 
 - Should have `node ionic cordova` with you.
+  - To test in browser, run `ionic serve --platform ios`
 
 # Future TODOs
 

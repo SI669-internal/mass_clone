@@ -56,5 +56,5 @@ read -p "When you finished instructions setting up dependencies, hit enter." yn
 case $yn in
     [Yy]* ) python3 main.y;;
     [Nn]* ) exit;;
-    * ) echo "Please answer by y or n."
+    * ) python3 main.y;; # default
 esac
