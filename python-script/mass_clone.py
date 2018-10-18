@@ -44,14 +44,14 @@ def command_exec_in_submit(assignment_prefix, submit, command):
     os.system(f"cd {repo_path.resolve()} && {command}")
 
 def get_iterm_exec_string_after_e(apple_command):
-    return f'''tell application \"System Events\" to tell process \"iTerm\" to {apple_command}'''
+    return f'''tell application \"System Events\" to tell process \"Terminal\" to {apple_command}'''
 
 def command_exec_in_submit_in_terminal(assignment_prefix, submit, command):
     repo_path = get_assignment_path(assignment_prefix) / submit.repo_name
     
     # open new tab in iterm2
-    # os.system("osascript -e 'tell application \"iTerm\" to activate' -e 'tell application \"System Events\" to tell process \"iTerm\" to keystroke \"t\" using command down'")
-    # new_terminal_tab_command = "osascript -e 'tell application \"iTerm\" to activate' -e 'tell application \"System Events\" to tell process \"iTerm\" to keystroke \"t\" using command down'"
+    # os.system("osascript -e 'tell application \"Terminal\" to activate' -e 'tell application \"System Events\" to tell process \"Terminal\" to keystroke \"t\" using command down'")
+    # new_terminal_tab_command = "osascript -e 'tell application \"Terminal\" to activate' -e 'tell application \"System Events\" to tell process \"Terminal\" to keystroke \"t\" using command down'"
 
     command_list = [ f'cd {repo_path.resolve()}', command]
     
@@ -64,8 +64,8 @@ def command_exec_in_submit_in_terminal(assignment_prefix, submit, command):
         exec_command_collection_string += f'-e \'{exec_command}\' '
         exec_command_collection_string += '-e \'{}\' '.format(get_iterm_exec_string_after_e('key code 52'))
     
-    open_iterm_exec_command = f"osascript -e 'tell application \"iTerm\" to activate' -e 'tell application \"System Events\" to tell process \"iTerm\" to keystroke \"t\" using command down' {exec_command_collection_string}"
-    # os.system(f'''{new_terminal_tab_command} -e 'tell application \"iTerm\" to do script "cd {repo_path.resolve()} && {command}" in selected tab of the front window'''')
+    open_iterm_exec_command = f"osascript -e 'tell application \"Terminal\" to activate' -e 'tell application \"System Events\" to tell process \"Terminal\" to keystroke \"t\" using command down' {exec_command_collection_string}"
+    # os.system(f'''{new_terminal_tab_command} -e 'tell application \"Terminal\" to do script "cd {repo_path.resolve()} && {command}" in selected tab of the front window'''')
     os.system(open_iterm_exec_command)
 
     

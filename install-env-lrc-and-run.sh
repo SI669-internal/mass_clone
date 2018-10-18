@@ -8,8 +8,8 @@ xcode-select --install
 
 read -p "You should see a prompt asking you to install software (xcode command line tools), please do so by pressing 'install' button. When you finish, proceed by hitting enter." yn
 
-brew install python3 node && npm i -g ionic cordova && \
-brew tap caskroom/cask && brew cask install visual-studio-code # will take a while
+brew install python3 node && npm i -g @angular/cli ionic cordova && \
+brew tap caskroom/cask && brew cask install --appdir=~/Downloads visual-studio-code # will take a while
 if [[ $? -eq 0 ]];
     then
     :
