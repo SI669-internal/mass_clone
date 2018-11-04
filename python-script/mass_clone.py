@@ -68,7 +68,8 @@ def command_exec_in_submit_in_terminal(assignment_prefix, submit, command):
     
     open_iterm_exec_command = f"osascript -e 'tell application \"iTerm\" to activate' -e 'tell application \"System Events\" to tell process \"iTerm\" to keystroke \"t\" using command down' {exec_command_collection_string}"
     # os.system(f'''{new_terminal_tab_command} -e 'tell application \"iTerm\" to do script "cd {repo_path.resolve()} && {command}" in selected tab of the front window'''')
-    os.system(open_iterm_exec_command)
+    if os.system(open_iterm_exec_command) != 0:
+        open_iterm_exec_command = open_iterm_exec_command.replace("iTerm", "Terminal")
 
     
 def wipe_all_repo(assignment_prefix):
