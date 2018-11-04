@@ -32,6 +32,21 @@
         },
 
         "grade_additional_command": "ionic serve --platform ios"
+    },
+    "lab-6-whack-a-mole": {
+        "skip-mode": "default", 
+
+        "sheet_tab_name": "main",
+
+        "github_config": {
+            "refetch_repo_list": false,
+
+            "clone_repo_mode": "soft", 
+
+            "repo_additional_command": "if [ -f ./package.json ]; then npm i; fi"
+        },
+
+        "grade_additional_command": "ionic serve --platform ios"
     }
     
 }
