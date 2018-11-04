@@ -74,6 +74,8 @@
 - Download [this script](https://raw.githubusercontent.com/SI669-internal/mass_clone/master/install-env-lrc-and-run.sh), or see `install-env-lrc-and-run.sh` in the project root folder.
 
 - Run the script
+- Download `mass-clone-local-needs.zip`
+- Wait for installation to complete
 
 ## What does the script do?
 
