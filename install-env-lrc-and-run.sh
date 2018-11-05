@@ -32,6 +32,8 @@ git clone https://github.com/SI669-internal/mass_clone.git
 
 cd mass_clone
 
+cd python-script
+
 python3 -m venv venv
 
 . ./venv/bin/activate
@@ -40,8 +42,6 @@ python3 -m venv venv
 # easy_install --user pip
 
 pip install -r requirements.txt && \
-
-cd python-script
 
 cp credentials_example.py credentials.py
 
