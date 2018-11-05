@@ -58,5 +58,5 @@ read -p "When you finished instructions setting up dependencies, hit enter." yn
 case $yn in
     [Yy]* ) python3 main.py;;
     [Nn]* ) exit;;
-    * ) python3 main.y;; # default
+    * ) python3 main.py;; # default
 esac
