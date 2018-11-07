@@ -16,11 +16,30 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets'
 
 class SheetAPI():
 
-    def __init__(self, spreadsheet_id, sheet_tab_name):
+    def __init__(self, spreadsheet_id, sheet_tab_name, sheet_tab_ranges={}):
+        self.sheet_tab_ranges = {
+            'overall': sheet_tab_ranges.get('overall', 'A3:AH'),
+            'roster': {
+                'start_row_index': {
+                    'student_full_names': sheet_tab_ranges.get('roster', {}).get('start_row_index', {}).get('student_full_names', 2),
+                    'github_accounts': sheet_tab_ranges.get('roster', {}).get('start_row_index', {}).get('github_accounts', 1),
+                    'uniqnames': sheet_tab_ranges.get('roster', {}).get('start_row_index', {}).get('uniqnames', 0),
+                },
+                'start_column_index': sheet_tab_ranges.get('roster', {}).get('start_column_index', 3)
+            },
+            'data': {
+                'start_row_index': sheet_tab_ranges.get('data', {}).get('start_row_index', 3),
+                'start_column_index': sheet_tab_ranges.get('data', {}).get('start_column_index', 0),
+            } 
+        }
+        
         self.spreadsheet_id = spreadsheet_id
         self.sheet_tab_name = sheet_tab_name
         self.service = self.get_service()
-        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api(f'{self.sheet_tab_name}!A4:AH')
+        self.raw_api_columns, self.raw_api_rows = self.get_raw_data_spreadsheet_api(f'{self.sheet_tab_name}!{self.sheet_tab_ranges["overall"]}')
+        self.student_full_names = self.get_student_names()
+        self.github_accounts = self.get_github_accounts()
+        self.uniqnames = self.get_uniqnames()
         self.student_names_order = self.get_student_name_order_spreadsheet()
 
     def get_service(self):
@@ -36,8 +55,7 @@ class SheetAPI():
 
         return service
 
-    def get_raw_data_spreadsheet_api(self, range):
-        data_range = range
+    def get_raw_data_spreadsheet_api(self, data_range):
         service = self.service
         
         result = service.spreadsheets().values().get( # https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchGet
@@ -57,19 +75,45 @@ class SheetAPI():
         return (raw_api_columns, raw_api_rows)
     
     def get_student_names(self):
-        row_fields = self.raw_api_rows[1]
-        return row_fields[3:]
+        row_fields = self.raw_api_rows[ self.sheet_tab_ranges['roster']['start_row_index']['student_full_names'] ]
+        return row_fields[ self.sheet_tab_ranges['roster']['start_column_index'] :]
     
     def get_github_accounts(self):
-        row_fields = self.raw_api_rows[0]
-        return row_fields[3:]
+        row_fields = self.raw_api_rows[ self.sheet_tab_ranges['roster']['start_row_index']['github_accounts'] ]
+        return row_fields[ self.sheet_tab_ranges['roster']['start_column_index'] :]
+
+    def get_uniqnames(self):
+        row_fields = self.raw_api_rows[ self.sheet_tab_ranges['roster']['start_row_index']['uniqnames'] ]
+        return row_fields[ self.sheet_tab_ranges['roster']['start_column_index'] :]
 
     def get_student_name_order_spreadsheet(self):
-        student_names = self.get_student_names()
+        student_names = self.student_full_names
         student_names_order_position = {}
         for i, student_name in enumerate(student_names):
             student_names_order_position[student_name] = i
         return student_names_order_position
+    
+    def get_roster_by_key(self, key):
+        roster = {}
+        if key == 'full_name':
+            for index, value in enumerate(self.student_full_names):
+                roster[ value ] = {
+                    'github_account': self.github_accounts[index],
+                    'uniqname': self.uniqnames[index],
+                }
+        elif key == 'github_account':
+            for index, value in enumerate(self.github_accounts):
+                roster[ value ] = {
+                    'full_name': self.student_full_names[index],
+                    'uniqname': self.uniqnames[index],
+                }
+        elif key == 'uniqname':
+            for index, value in enumerate(self.uniqnames):
+                roster[ value ] = {
+                    'github_account': self.github_accounts[index],
+                    'full_name': self.student_full_names[index],
+                }
+        return roster
 
     def write_data_to_spreadsheet(self, service, rows_data=[]):
         # clean data
@@ -232,5 +276,4 @@ class SheetAPI():
         self.write_data_to_spreadsheet(self.service, rows_data)
 
 if __name__ == '__main__':
-    sheet_api = SheetAPI()
-    sheet_api.upload_all_records()
+    pass

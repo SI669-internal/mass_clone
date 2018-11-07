@@ -2,36 +2,44 @@ from utilities import *
 from pathlib import Path
 import os
 
-def mass_clone(assignment_prefix, submit_list, repo_additional_command):
-    # initializing assignment
+def single_clone(assignment_prefix, submit, repo_additional_command):
+    global ERROR_MESSAGES
+    print('INFO: Cloning git repo...')
+
+    # checking assignment folder existance
     assignment_prefix_directory_path = get_assignment_path(assignment_prefix)
     try:
         assignment_prefix_directory_path.mkdir()
     except:
         pass
+
+    assignment_prefix_directory_path = get_assignment_path(assignment_prefix)
+    repo_path = assignment_prefix_directory_path / submit.repo_name
+
+    if repo_path.exists():
+        pass
+    else:
+        command = f'git clone {submit.clone_url} {repo_path.resolve()}'   
+        check_return = os.system(f"cd {assignment_prefix_directory_path.resolve()} && {command}")
+        if check_return != 0:
+            ERROR_MESSAGES.append(f'ERROR: Failed on git clone. Student Name: {submit.student_name}, clone url: {submit.clone_url}')
+            return False
+        else:
+            if not repo_additional_command:
+                ERROR_MESSAGES.append(f'''WARNING: repo_additional_command is empty. If you don't need a command, please feed a ';' at the minimal. ''')
+            check_return = os.system(f"cd {repo_path.resolve()} && {repo_additional_command}")
+            if check_return != 0:
+                ERROR_MESSAGES.append(f'ERROR: Failed on additional command. Command: {repo_additional_command}, at repo_path: {repo_path}.')
+                return False
     
+    return True
+
+def mass_clone(assignment_prefix, submit_list, repo_additional_command):
     global ERROR_MESSAGES
     all_succeed = True
     # initalizing each submit
     for submit in submit_list:
-        repo_path = assignment_prefix_directory_path / submit.repo_name
-        
-        if repo_path.exists():
-            pass
-        else:
-            print('INFO: Cloning git repo...')
-            command = f'git clone {submit.clone_url} {repo_path.resolve()}'   
-            check_return = os.system(f"cd {assignment_prefix_directory_path.resolve()} && {command}")
-            if check_return != 0:
-                ERROR_MESSAGES.append(f'ERROR: Failed on git clone. Student Name: {submit.student_name}, clone url: {submit.clone_url}')
-                all_succeed = False
-            else:
-                if not repo_additional_command:
-                    ERROR_MESSAGES.append(f'''WARNING: repo_additional_command is empty. If you don't need a command, please feed a ';' at the minimal. ''')
-                check_return = os.system(f"cd {repo_path.resolve()} && {repo_additional_command}")
-                if check_return != 0:
-                    ERROR_MESSAGES.append(f'ERROR: Failed on additional command. Command: {repo_additional_command}, at repo_path: {repo_path}.') if check_return != 0 else None
-                    all_succeed = False
+        all_succeed = single_clone(assignment_prefix, submit, repo_additional_command)
     
     if all_succeed:
         print('\nINFO: All repo cloned successfully.')
@@ -72,9 +80,12 @@ def command_exec_in_submit_in_terminal(assignment_prefix, submit, command):
         
 
     
-def wipe_all_repo(assignment_prefix):
-    assignment_prefix_directory_path = get_assignment_path(assignment_prefix)
-    os.system(f"cd {ALL_ASSIGNMENT_DIRECTORY_PATH.resolve()} && rm -rf {assignment_prefix}")
+def wipe_repo(assignment_prefix, student_repo_name=None):
+    if not student_repo_name:
+        os.system(f"cd {ALL_ASSIGNMENT_DIRECTORY_PATH.resolve()} && rm -rf {assignment_prefix}")
+    else:
+        assignment_prefix_directory_path = get_assignment_path(assignment_prefix)
+        os.system(f"cd {assignment_prefix_directory_path.resolve()} && rm -rf {student_repo_name}")
     
 
 if __name__ == "__main__":

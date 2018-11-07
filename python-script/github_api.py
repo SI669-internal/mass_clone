@@ -60,7 +60,6 @@ def get_api_data(assigment_prefix):
         response_file_path.replace(backup_data_folder_path / response_file_path.name)
 
     # Github API https://developer.github.com/v3/repos/#list-your-repositories
-    print('INFO: Downloading meta data from Github...')
 
     # response = get('https://api.github.com/orgs/SI669-classroom/repos', 
     #     auth=(os.environ['GITHUB_USER'], os.environ['GITHUB_PASSWORD']),
