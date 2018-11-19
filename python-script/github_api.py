@@ -33,7 +33,7 @@ def filter_submit_from_api_data(api_data, assignment_prefix, sheet_api):
         # filter only this assingment
         if data['name'].startswith(assignment_prefix):
             repo_name = data['name']
-            github_account = repo_name.split('-')[-1]
+            github_account = repo_name.replace(f"{assignment_prefix}-", '')
 
             # exclude instructors
             if (

@@ -145,12 +145,12 @@ def interactive_assignment_setup(_config={}):
     
     if not assignment.due:
         user_input = input('\nNo assignment due in cache, please provide in format YYYY-MM-DD (Will always use 23:59:59 as time): ')
-        assignment.due = Serializer.deserialize_time(f'{user_input}T23:59:59Z')
+        assignment.due = Serializer.deserialize_time(f'{user_input}T23:59:59Z', is_local=True)
         assignment.save()
     
     print(f'\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually later in data/records.')
     print('\n---Assignment Info---')
-    print(f'Assignment: {assignment.prefix}\nDue: {assignment.due}\nFull Points: {assignment.full_points}\nSubmits Total: {len(assignment.submits)}\nGraded: {get_graded_number(assignment)}\nMode: {mode}\nBatch Grading: {is_batch_processing}\n---------------------')
+    print(f'Assignment: {assignment.prefix}\nDue: {assignment.due.astimezone()}\nFull Points: {assignment.full_points}\nSubmits Total: {len(assignment.submits)}\nGraded: {get_graded_number(assignment)}\nMode: {mode}\nBatch Grading: {is_batch_processing}\n---------------------')
     user_input = input('\nConfirm if the assignment info is correct? (Y/n) ')
 
     if user_input == '' or user_input.lower() == 'y':
@@ -217,8 +217,18 @@ def batch_grade_submit(assignment, sheet_api, mode='default', grade_additional_c
     print('\nINFO: Script finished without error.')
 
 def grade_submit(assignment, submit, sheet_api, submits_total, i, mode='default', grade_additional_command=';'):
+    late_policy = LatePolicy(assignment.due, submit.submitted_at)
     # Info
-    print(f'''\n-----Grading {i+1}th/{submits_total}, Graded {get_graded_number(assignment)}-----\nStudent Name: {submit.student_name}\nRepo: {submit.repo_name}\nComment: {submit.comment}\nGrade: {submit.grade}/{assignment.full_points}\n''')
+    print(f'''
+-----Grading {i+1}th/{submits_total}, Graded {get_graded_number(assignment)}-----
+Student Name: {submit.student_name}
+Repo: {submit.repo_name}
+Comment: {submit.comment}
+Raw Grade: {submit.grade}/{assignment.full_points}
+Late Penalty: {late_policy.get_late_penalty_discount_percentage()}%
+Submitted At: {submit.submitted_at.astimezone()}
+    '''
+    )
     os.system(f"cd {get_submit_path(assignment.prefix, submit)}")
 
     # Skip?

@@ -16,7 +16,7 @@ def clear_and_prompt_error():
         print(ERROR_MESSAGES)
     ERROR_MESSAGES = []
     user_input = input('\nWARNING: Please check the error message(s) above. Proceed? (Y/n) ')
-    if user_input.lower() != 'y':
+    if user_input.lower() != 'y' and user_input != '':
         exit(0)
 
 def store_session_dict(dictionary_data, file_name):

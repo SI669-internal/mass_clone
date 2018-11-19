@@ -155,11 +155,16 @@ class Serializer():
         pass
     
     @staticmethod
-    def deserialize_time(time_string):
+    def deserialize_time(time_string, is_local=False):
         if not time_string:
             return None
         else:
-            return datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
+            if is_local:
+                local_datetime = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ').astimezone()
+                utc_datetime = local_datetime.astimezone(datetime.timezone.utc)
+                return utc_datetime
+            else:
+                return datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
     
     @staticmethod
     def serialize_time(datetime_object):
@@ -170,3 +175,48 @@ class Serializer():
 
 if __name__ == "__main__":
     pass
+
+class LatePolicy():
+    '''
+        Before the deadline: No penalty
+        0:01-24:00 hours after the deadline: 10% off
+        24:01-48:00 hours after the deadline: 20% off
+        48:01-72:00 hours after the deadline: 30% off
+        72:01-96:00 hours after the deadline: 40% off
+        > 96 hours after the deadline: 100% off
+    '''
+
+    def __init__(self,
+        utc_due=datetime.datetime.now(tz=datetime.timezone.utc), 
+        utc_submitted_at=datetime.datetime.now(tz=datetime.timezone.utc), 
+        *args, **kwargs):
+
+        self.utc_due = utc_due
+        self.utc_submitted_at = utc_submitted_at
+    
+    def is_late(self):
+        if self.utc_submitted_at <= self.utc_due:
+            return False
+        else:
+            return True
+
+    def get_late_penalty_discount_percentage(self):
+        if self.is_late():
+            if self.utc_submitted_at <= self.utc_due + datetime.timedelta(hours=24):
+                return 10
+            elif self.utc_submitted_at <= self.utc_due + datetime.timedelta(hours=48):
+                return 20
+            elif self.utc_submitted_at <= self.utc_due + datetime.timedelta(hours=72):
+                return 30
+            elif self.utc_submitted_at <= self.utc_due + datetime.timedelta(hours=96):
+                return 40
+            else:
+                return 100
+        else:
+            return 0
+
+    def get_late_penalty_multiplier(self):
+        discount_percentage = self.get_late_penalty_discount_percentage()
+        return (1 - discount_percentage * .01)
+
+    
