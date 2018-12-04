@@ -34,7 +34,7 @@ You should have `node ionic cordova` installed globally for SI 669. It's best to
 
 # Quickstart
 
-1. At proejct root, run `. ./setup-project.sh`
+1. Clone the project. At project root, run `. ./setup-project.sh`
 2. Setup Google Sheet API - download `credentials.json`.
     1. [Go to Sheet API Doc](https://developers.google.com/sheets/api/quickstart/python) and press "Enable the google sheets api" to download. After you have the `json` credential, place in folder `python-script`.
     1. ~~Prepare a google spreadsheet where you'll use it to store your grading and comments.~~
