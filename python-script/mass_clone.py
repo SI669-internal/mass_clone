@@ -26,7 +26,7 @@ def single_clone(assignment_prefix, submit, repo_additional_command):
             return False
         else:
             if not repo_additional_command:
-                ERROR_MESSAGES.append(f'''WARNING: repo_additional_command is empty. If you don't need a command, please feed a ';' at the minimal. ''')
+                ERROR_MESSAGES.append(f'''WARNING: repo_additional_command is empty. If you don't need a command, please feed a ':' at the minimal. ''')
             check_return = os.system(f"cd {repo_path.resolve()} && {repo_additional_command}")
             if check_return != 0:
                 ERROR_MESSAGES.append(f'ERROR: Failed on additional command. Command: {repo_additional_command}, at repo_path: {repo_path}.')

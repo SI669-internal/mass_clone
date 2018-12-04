@@ -34,12 +34,12 @@
         "grade_additional_command": "ionic serve --platform ios"
     },
     "lab-6-whack-a-mole": {
-        "skip-mode": "default", 
-
         "sheet_tab_name": "main",
 
+        "is_batch_processing": false,
+
         "github_config": {
-            "refetch_repo_list": false,
+            "refetch_repo_list": true,
 
             "clone_repo_mode": "soft", 
 
@@ -47,6 +47,16 @@
         },
 
         "grade_additional_command": "ionic serve --platform ios"
+    },
+    "project-1-quicklist-app": {
+        "sheet_tab_name": "main",
+
+        "is_batch_processing": false,
+
+        "github_config": {
+            "refetch_repo_list": true,
+
+            "clone_repo_mode": "soft"
+        }
     }
-    
 }

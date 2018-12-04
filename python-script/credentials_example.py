@@ -13,4 +13,4 @@ os.environ['GITHUB_USER'] = 'YOUR GITHUB ACCOUNT NAME'
 os.environ['GITHUB_PASSWORD'] = 'YOUR GITHUB PASSWORD'
 
 # get spread id here https://docs.google.com/spreadsheets/d/<ID HERE>/edit..
-os.environ['SPREADSHEET_ID'] = 'GOOGLE SHEET ID YOU WANT TO WRITE TO'
+os.environ['SPREADSHEET_ID'] = '1jZOmd0lkXcllnhtk3DmC7oSM5Q_4H7R-pO9Wy-ydzKo'

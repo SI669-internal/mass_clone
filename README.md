@@ -28,28 +28,32 @@
 
 ```
 
-# How to use
+## Prerequisite
 
-1. Clone this repo.
-1. Setup dependency following the section below.
-1. Run `python3 main.py`
+You should have `node ionic cordova` installed globally for SI 669. It's best to have `Visual Studio Code` installed, but you can also use your own editor of preference.
 
-# Dependency
+# Quickstart
 
-- `pip install -r requirements.txt`
+- At proejct root, run `. ./setup-project.sh`
 - Setup Google Sheet API - download `credentials.json` and place in folder `python-script`.
   - [Go to Sheet API Doc](https://developers.google.com/sheets/api/quickstart/python) and press "Enable the google sheets api" to download.
-  - Prepare a google spreadsheet where you'll use it to store your grading and comments.
-  - Copy the spreadsheet ID and put it in `credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`
-- Follow the instructions in `credentials_example.py`. This file is for github API that can search and get repo info. Not needed if the repos for the assignment does not come from Github Classroom.
-- Follow the instructions in `settings_example.py` to setup your local setting.
+  - ~~Prepare a google spreadsheet where you'll use it to store your grading and comments.~~
+  - ~~Copy the spreadsheet ID and put it in `python-script/credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`~~
+- Enter your github account/password in `python-script/credentials.py`. This file is for github API that can search and get repo info. Not needed if the assignment you are working on does not use Github Classroom (in such case, you'll have to feed the repo info using a google spreadsheet).
+- `cd python-script` and turn on the virtual environment by `. ./venv/bin/activate`
+- `python main.py` to run the program.
 
-- (Optional) Make sure you have `vscode` and `Path` setup, so when you run `code .` in terminal, vscode will open the current directory. [See this page for how to setup](https://code.visualstudio.com/docs/setup/mac).
-- (Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.
-  - otherwise won't open iterm2 for you even when you set `grade_additional_command`
+# Configuration
 
-- Should have `node ionic cordova` with you.
-  - To test in browser, run `ionic serve --platform ios`
+- There're two config files, `python-script/settings_local.py` and `python-script/script-session/local-config.json`. `local-config.json` has higher priority and will overwrite the settnigs in `settings_local.py`.
+- `settings_local.py` provides a setting base for default. On the other hand, `local-config.json` lets you preserve and reuse settings for each assignment.
+- The recommended workflow will be to test your settings in `settings_local.py` for the assignment you're workin on first. When you feel comfortable with that setting, you can copy that setting to `local-config.json` and specify the assingment prefix accordingly.
+
+- The default setting assume you have `vscode` installed. See `python-script/settings_local.py`, there's a `"grade_additional_command": "open -a Visual\ Studio\ Code .",` line. If you want to use your own editor, change the name of the last argument.
+
+- ~~(Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.~~
+  - ~~otherwise won't open iterm2 for you even when you set `grade_additional_command`~~
+
 
 # Future TODOs
 
@@ -67,7 +71,7 @@
 - [Case A] reject in the first loop round, but the loop still keeps going. (`resolve()` and `reject()` will not stop loop? Should instead explicitly do `return` after `resolve()` or `reject()`. [See this post](https://stackoverflow.com/questions/32536049/do-i-need-to-return-after-early-resolve-reject))
 - [Performance] `countBig()`: putting `resolve()` outside of `while` is much faster (10ms). If you put `if` in `while` then do `resolve()`, you have to keep checking for each round, which is much slower (500-1200ms).
 
-# Run On A Public Computer
+# ~~Run On A Public Computer~~
 
 ## TL;DR
 

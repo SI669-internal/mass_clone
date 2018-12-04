@@ -56,15 +56,54 @@ Otherwise if students are using Github Classroom, do not specify this key or ple
 
 def get_script_settings():
     return {
-        'skip-mode': 'skip-issue-graded',
+        # (optional) available options listed below.
+        #     'skip-issue-graded': skip commented submits and graded submits.
+        #     'skip-issue': skip commented submits
+        #     'default': always ask before skip
+        'skip-mode': 'default',
+        "is_batch_processing": False,
+
+
+        # [required] specify the sheet tab you want to show the result / progress of grading  
         'sheet_tab_name': 'main',
-        'github_config': {
-            # 'refetch_repo_list': True,
-            # 'clone_repo_mode': 'soft',
-            'use_personal_repo': {
-                'sheet_range': 'lab3_personal_repo!B2:Y'
+        'sheet_tab_ranges': {
+            'overall': 'A3:AH',
+            'roster': {
+                'start_row_index': {
+                    'student_full_names': 2,
+                    'github_accounts': 1,
+                    'uniqnames': 0,
+                },
+                'start_column_index': 3,
             },
-            'repo_additional_command': 'if [ -f ./package.json ]; then npm i; fi'
+            'data': {
+                'start_row_index': 3,
+                'start_column_index': 0,
+            } 
         },
-        'grade_additional_command': 'ng serve --open'
+
+
+        'github_config': {
+            # (optional)
+            'refetch_repo_list': False,
+
+            # (optional)
+            'clone_repo_mode': 'hard',
+
+            # # [required] only if repo is not using Github Classroom; otherwise, please comment out.
+            # 'use_personal_repo': {
+            #     # specify the range where the personal repo info are. See example at https://docs.google.com/spreadsheets/d/1jZOmd0lkXcllnhtk3DmC7oSM5Q_4H7R-pO9Wy-ydzKo/edit#gid=1501573164
+            #     'sheet_range': 'lab3_personal_repo!B2:Y'
+            # },
+
+            # (optional) after repo cloned, this code will run in shell environment. Already cd to repo directory for you.
+            # 'repo_additional_command': 'if [ -f ./package.json ]; then npm i; fi'
+        },
+
+
+        # (optional) when grading in interactive console, for each grading, will run this code first. Already cd to repo directory for you.
+        # 'ng serve --open'
+        # 'ionic serve --platform ios'
+
+        "grade_additional_command": "open -a Visual\ Studio\ Code .",
     }

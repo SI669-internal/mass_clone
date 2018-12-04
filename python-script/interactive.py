@@ -39,6 +39,7 @@ from github_use_personal_repo import *
 
 from utilities import *
 from mass_clone import *
+from logger import *
 
 # see more at https://gist.github.com/bobthecow/757788
 def get_submit_path(assignment_prefix, submit):
@@ -74,7 +75,7 @@ def load_submit_data(prefix, due='', full_points='', github_config={}, sheet_api
             use_personal_repo_submit_data = GithubUsePersonalRepo(sheet_api).get_personal_submits_data(prefix, sheet_range)
             assignment.deserialize_submits(use_personal_repo_submit_data)
 
-    repo_additional_command = github_config.get('repo_additional_command', ';')
+    repo_additional_command = github_config.get('repo_additional_command', ':')
     print('\nINFO: Cloning submits...')
     if not is_cloning_repo:
         print(f"INFO: since not batch processing, we won't clone any repo now; is_cloning_repo is {is_cloning_repo}")
@@ -121,7 +122,7 @@ def interactive_assignment_setup(_config={}):
     sheet_tab_name = config.get('sheet_tab_name', None)
     sheet_tab_ranges = config.get('sheet_tab_ranges', {})
     is_batch_processing = config.get('is_batch_processing', True)
-    grade_additional_command = config.get('grade_additional_command', ';')
+    grade_additional_command = config.get('grade_additional_command', ':')
     sheet_api = SheetAPI(spreadsheet_id, sheet_tab_name, sheet_tab_ranges)
     github_config = config.get('github_config', {})
     
@@ -159,7 +160,7 @@ def interactive_assignment_setup(_config={}):
         else:
             single_grade_submit(assignment, sheet_api, mode=mode, 
                 grade_additional_command=grade_additional_command, 
-                repo_additional_command=github_config.get('repo_additional_command', ';'),
+                repo_additional_command=github_config.get('repo_additional_command', ':'),
                 clone_repo_mode=github_config.get('clone_repo_mode', 'soft')
             )
     else:
@@ -169,20 +170,39 @@ def interactive_assignment_setup(_config={}):
         ))
         print('INFO: Script terminated.')
 
-def single_grade_submit(assignment, sheet_api, mode='default', grade_additional_command=';', repo_additional_command=';', clone_repo_mode='soft'):
-    roster = sheet_api.get_roster_by_key('uniqname')
+def single_grade_submit(assignment, sheet_api, mode='default', grade_additional_command=':', repo_additional_command=':', clone_repo_mode='soft'):
+    uniqname_roster = sheet_api.get_roster_by_key('uniqname')
+    full_name_roster = sheet_api.get_roster_by_key('full_name')
     round_count = 0
     submits_total = len(assignment.submits)
     while True:
-        user_input = input('Enter student\'s uniqname: ')
-        print(f'INFO: student full name: {roster[user_input]["full_name"]}')
-        print(f'INFO: student github account: {roster[user_input]["github_account"]}')
-        if user_input:
-            target_submit = None
-            for submit in assignment.submits:
-                if submit.github_account == roster[user_input]['github_account']:
-                    target_submit = submit
-                    break
+        user_input = input('Select by student uniqname or fullname?(U/f)')
+        try:
+            if user_input.lower() == 'f':
+                user_input = input('Enter student\'s full name: ')
+                full_name = user_input
+                uniqname = full_name_roster[full_name]['uniqname']
+                github_account = full_name_roster[full_name]['github_account']
+            elif not user_input or user_input.lower() == 'u':
+                user_input = input('Enter student\'s uniqname: ')
+                uniqname = user_input
+                full_name = uniqname_roster[uniqname]['full_name']
+                github_account = uniqname_roster[uniqname]['github_account']
+        except KeyError:
+            print(Logger.error('ERROR: Cannot find such student in roster. You may checkout the google sheet: {}'.format(
+                'https://docs.google.com/spreadsheets/d/' + os.environ['SPREADSHEET_ID']
+            )))
+            exit(1)
+        
+        print(f'INFO: student full name: {full_name}')
+        print(f'INFO: student uniqname: {uniqname}')
+        print(f'INFO: student github account: {github_account}')
+
+        if all([uniqname, full_name, github_account]):
+            target_submit = next(filter(
+                lambda s: s.github_account == github_account,
+                assignment.submits
+            ), None)
             
             if target_submit:
                 if clone_repo_mode == 'soft':
@@ -194,9 +214,13 @@ def single_grade_submit(assignment, sheet_api, mode='default', grade_additional_
                 round_count = grade_submit(assignment, target_submit, sheet_api, submits_total, round_count, mode, grade_additional_command)
             else:
                 print(f"INFO: no submit record for {user_input}")
+        else:
+            print(f"ERROR: Cannot lookup all student info from roster.")
+            print(f"INFO: Uniqname: {uniqname}, Full Name: {full_name}, Github: {github_account}")
+            exit(1)
 
 
-def batch_grade_submit(assignment, sheet_api, mode='default', grade_additional_command=';'):
+def batch_grade_submit(assignment, sheet_api, mode='default', grade_additional_command=':'):
     i = 0
     submits_total = len(assignment.submits)
     while i < submits_total:
@@ -216,7 +240,7 @@ def batch_grade_submit(assignment, sheet_api, mode='default', grade_additional_c
     print('\nINFO: Finishing looping through all submits.')
     print('\nINFO: Script finished without error.')
 
-def grade_submit(assignment, submit, sheet_api, submits_total, i, mode='default', grade_additional_command=';'):
+def grade_submit(assignment, submit, sheet_api, submits_total, i, mode='default', grade_additional_command=':'):
     late_policy = LatePolicy(assignment.due, submit.submitted_at)
     # Info
     print(f'''
