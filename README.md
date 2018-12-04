@@ -40,6 +40,7 @@ You should have `node ionic cordova` installed globally for SI 669. It's best to
   - ~~Prepare a google spreadsheet where you'll use it to store your grading and comments.~~
   - ~~Copy the spreadsheet ID and put it in `python-script/credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`~~
 - Enter your github account/password in `python-script/credentials.py`. This file is for github API that can search and get repo info. Not needed if the assignment you are working on does not use Github Classroom (in such case, you'll have to feed the repo info using a google spreadsheet).
+  - Don't worry - all your credentials are gitignored and won't be pushed to the repo.
 - `cd python-script` and turn on the virtual environment by `. ./venv/bin/activate`
 - `python main.py` to run the program.
 
