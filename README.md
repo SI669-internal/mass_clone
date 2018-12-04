@@ -51,7 +51,7 @@ You should have `node ionic cordova` installed globally for SI 669. It's best to
 - `settings_local.py` provides a setting base for default. On the other hand, `local-config.json` lets you preserve and reuse settings for each assignment.
 - The recommended workflow will be to test your settings in `settings_local.py` for the assignment you're workin on first. When you feel comfortable with that setting, you can copy that setting to `local-config.json` and specify the assingment prefix accordingly.
 
-- The default setting assume you have `vscode` installed. See `python-script/settings_local.py`, there's a `"grade_additional_command": "open -a Visual\ Studio\ Code .",` line. If you want to use your own editor, change the name of the last argument.
+- The default setting assume you have `vscode` installed and `PATH` setup to open a project in `vscode` by `code .` . See `python-script/settings_local.py`, there's a `"grade_additional_command": "code .",` line. If you want to use your own editor, you'll need to change the command to the one that will fire up your editor. You can assume that the command is executed in the student's repo root folder.
 
 - ~~(Optional) Using `iterm2` if you want to use `grade_additional_command`, which lets you run command that will be executed in the repo directory when you're grading submits.~~
   - ~~otherwise won't open iterm2 for you even when you set `grade_additional_command`~~
