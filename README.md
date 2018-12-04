@@ -43,6 +43,7 @@ You should have `node ionic cordova` installed globally for SI 669. It's best to
     1. Don't worry - all your credentials are gitignored and won't be pushed to the repo.
 4. `cd python-script` and turn on the virtual environment by `. ./venv/bin/activate`
 5. `python main.py` to run the program.
+    1. When the tool is setting up repos and opening project in editor for you, please refrain from switching and using to other application. This is because some of the automation simulates keyboard input and will not work if the tool lose focus.
 
 # Configuration
 

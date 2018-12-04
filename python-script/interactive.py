@@ -76,31 +76,31 @@ def load_submit_data(prefix, due='', full_points='', github_config={}, sheet_api
             assignment.deserialize_submits(use_personal_repo_submit_data)
 
     repo_additional_command = github_config.get('repo_additional_command', ':')
-    print('\nINFO: Cloning submits...')
+    
     if not is_cloning_repo:
-        print(f"INFO: since not batch processing, we won't clone any repo now; is_cloning_repo is {is_cloning_repo}")
-    elif repo_clone_mode == 'hard':
-        # wipe and reclone
-        wipe_repo(prefix)
-        mass_clone(prefix, assignment.submits, repo_additional_command)
-    elif repo_clone_mode == 'soft':
+        print(f"\nINFO: since not batch processing, we won't clone any repo now; is_cloning_repo is {is_cloning_repo}")
+    elif repo_clone_mode == 'hard' or repo_clone_mode == 'soft':
+        print('\nINFO: Batch cloning submits...')
+        if repo_clone_mode == 'hard':
+            # wipe and reclone
+            wipe_repo(prefix)
         mass_clone(prefix, assignment.submits, repo_additional_command)
 
     assignment.save()
     return assignment
 
 def interactive_assignment_setup(_config={}):
-    user_input = input('WARNING: This script will batch clone repo if not done yet, you might want to use in a public computer due to the heavy read/write on your computer disk. Proceed? (Y/n) ')
-    if user_input.lower() == 'n':
-        exit(0)
+    # user_input = input('WARNING: This script will batch clone repo if not done yet, you might want to use in a public computer due to the heavy read/write on your computer disk. Proceed? (Y/n) ')
+    # if user_input.lower() == 'n':
+    #     exit(0)
 
     # get assignment prefix
     previous_session_prefix_input = restore_session_dict('session.json')
     if previous_session_prefix_input and previous_session_prefix_input['prefix']:
         previous_session_prefix_input = previous_session_prefix_input['prefix']
-        user_input = input(f'\nWARNING: Will start fetching repos. Before that, please enter assignment prefix ({previous_session_prefix_input}): ')
+        user_input = input(f'\nPROMPT: Will start fetching repos. Before that, please enter assignment prefix, or press enter to use "{previous_session_prefix_input}": ')
     else:
-        user_input = input(f'\nWARNING: Will start fetching repos. Before that, please enter assignment prefix: ')
+        user_input = input(f'\nPROMPT: Will start fetching repos. Before that, please enter assignment prefix: ')
     if previous_session_prefix_input and user_input == '':
         user_input = previous_session_prefix_input
     elif not previous_session_prefix_input and user_input == '':
@@ -152,7 +152,7 @@ def interactive_assignment_setup(_config={}):
     print(f'\nFor each repo, we will open the repo folder in vscode for you, and let you input grade and comment. But, you can always edit grade or comment manually later in data/records.')
     print('\n---Assignment Info---')
     print(f'Assignment: {assignment.prefix}\nDue: {assignment.due.astimezone()}\nFull Points: {assignment.full_points}\nSubmits Total: {len(assignment.submits)}\nGraded: {get_graded_number(assignment)}\nMode: {mode}\nBatch Grading: {is_batch_processing}\n---------------------')
-    user_input = input('\nConfirm if the assignment info is correct? (Y/n) ')
+    user_input = input('\nPROMPT: Confirm if the assignment info is correct? (Y/n) ')
 
     if user_input == '' or user_input.lower() == 'y':
         if is_batch_processing:

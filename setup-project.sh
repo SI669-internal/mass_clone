@@ -15,14 +15,16 @@ cp settings_example.py settings_local.py
 
 cp script-session/recommend-config.json script-session/local-config.json
 
+echo "INFO: Done succesfuuly."
+
 # https://stackoverflow.com/questions/226703/how-do-i-prompt-for-yes-no-cancel-input-in-a-linux-shell-script
 
-read -p "Please follow the dependency instructions in https://github.com/SI669-internal/mass_clone . Also, we will open the project folder in Finder for you. If this sounds good, hit enter to proceed." yn
-open .
+# read -p "Please follow the dependency instructions in https://github.com/SI669-internal/mass_clone . Also, we will open the project folder in Finder for you. If this sounds good, hit enter to proceed." yn
+# open .
 
-read -p "PROMPT: When you finished instructions setting up dependencies, hit enter." yn
-case $yn in
-    [Yy]* ) python main.py;;
-    [Nn]* ) return;;
-    * ) python main.py;; # default
-esac
+# read -p "PROMPT: When you finished instructions setting up dependencies, hit enter." yn
+# case $yn in
+#     [Yy]* ) python main.py;;
+#     [Nn]* ) return;;
+#     * ) python main.py;; # default
+# esac
