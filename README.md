@@ -38,9 +38,9 @@ You should have `node ionic cordova` installed globally for SI 669. It's best to
 2. Setup Google Sheet API - download `credentials.json`.
     1. [Go to Sheet API Doc](https://developers.google.com/sheets/api/quickstart/python) and press "Enable the google sheets api" to download. After you have the `json` credential, place in folder `python-script`.
     1. ~~Prepare a google spreadsheet where you'll use it to store your grading and comments.~~
-  1. ~~Copy the spreadsheet ID and put it in `python-script/credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`~~
+    1. ~~Copy the spreadsheet ID and put it in `python-script/credentials.py` as `os.environ['SPREADSHEET_ID'] = 'YOUR SPREADSHEET ID'`~~
 3. Enter your github account/password in `python-script/credentials.py`. This file is for github API that can search and get repo info. Not needed if the assignment you are working on does not use Github Classroom (in such case, you'll have to feed the repo info using a google spreadsheet).
-  1. Don't worry - all your credentials are gitignored and won't be pushed to the repo.
+    1. Don't worry - all your credentials are gitignored and won't be pushed to the repo.
 4. `cd python-script` and turn on the virtual environment by `. ./venv/bin/activate`
 5. `python main.py` to run the program.
 
